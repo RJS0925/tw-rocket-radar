@@ -10,7 +10,20 @@ from flask import Flask, render_template, jsonify, request
 from rocket_crawler import RocketCrawler, PRESET_CITIES
 from rocket_data import TYPE_INFO, LEADER_INFO, ROCKET_ROSTER, LEADER_ROSTER
 
-app = Flask(__name__)
+import os
+import jinja2
+
+base_dir = os.path.dirname(os.path.abspath(__file__))
+app = Flask(__name__, template_folder=os.path.join(base_dir, "templates"))
+
+# 雙重防呆模板加載器：同時支援 templates 目錄與根目錄，解決 GitHub 網頁上傳目錄層級問題
+app.jinja_loader = jinja2.ChoiceLoader([
+    jinja2.FileSystemLoader(os.path.join(base_dir, "templates")),
+    jinja2.FileSystemLoader(base_dir),
+    jinja2.FileSystemLoader(os.getcwd()),
+    jinja2.FileSystemLoader(os.path.join(os.getcwd(), "templates")),
+])
+
 crawler = RocketCrawler()
 
 # 記憶體快取，全台灣掃描快取 45 秒
