@@ -98,21 +98,28 @@ class RocketCrawler:
         except ValueError:
             return None
             
-        # 計算倒數與過期狀態
+        # 計算倒數與過期狀態 (強制校準為台灣時間 UTC+8)
+        # 報寶貝回傳的是台灣本地時間，雲端伺服器 (Render/Linux) 預設為 UTC，時差剛好 8 小時 (480 分鐘)！
         remaining_seconds = 0
         remaining_text = "即將結束"
-        now = datetime.datetime.now()
+        tw_tz = datetime.timezone(datetime.timedelta(hours=8))
+        now_tw = datetime.datetime.now(tw_tz).replace(tzinfo=None)
         
         if expire_str:
             try:
                 expire_dt = datetime.datetime.strptime(expire_str, "%Y/%m/%d %H:%M:%S")
-                diff = (expire_dt - now).total_seconds()
+                diff = (expire_dt - now_tw).total_seconds()
                 remaining_seconds = int(diff)
                 if remaining_seconds <= 0:
                     return None  # 已過期跳過
-                mins = remaining_seconds // 60
+                
+                hours = remaining_seconds // 3600
+                mins = (remaining_seconds % 3600) // 60
                 secs = remaining_seconds % 60
-                remaining_text = f"{mins}分{secs:02d}秒"
+                if hours > 0:
+                    remaining_text = f"{hours}小時{mins:02d}分"
+                else:
+                    remaining_text = f"{mins}分{secs:02d}秒"
             except Exception:
                 pass
 
