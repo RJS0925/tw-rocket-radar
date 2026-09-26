@@ -174,6 +174,21 @@ def api_roster():
         "leaders": LEADER_ROSTER
     })
 
+def background_season_checker():
+    """背景定時檢查最新賽季陣容 (每 24 小時一次)，換季時自動無感熱更新"""
+    from rocket_data import sync_latest_season_from_leekduck
+    time.sleep(5)
+    sync_latest_season_from_leekduck()
+    while True:
+        time.sleep(86400)
+        try:
+            sync_latest_season_from_leekduck()
+        except Exception:
+            pass
+
+# 啟動換季自動同步守護執行緒
+threading.Thread(target=background_season_checker, daemon=True).start()
+
 if __name__ == "__main__":
     import os
     port = int(os.environ.get("PORT", 5050))

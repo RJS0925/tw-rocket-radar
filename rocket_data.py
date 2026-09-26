@@ -603,3 +603,77 @@ def get_season_roster_summary():
         })
         
     return summary
+
+def sync_latest_season_from_leekduck():
+    """
+    自動連線國際權威 LeekDuck 檢查最新賽季陣容 (Auto-Sync)
+    當遊戲換季官方換怪時，自動在背景熱更新幹部與小兵陣容，完全不需手動修改程式碼。
+    若遇網路波動或逾時，則自動維持內建穩定資料庫，保證 100% 安全不崩潰。
+    """
+    import urllib.request
+    import re
+    import json
+    import os
+
+    try:
+        url = "https://leekduck.com/rocket-lineups/"
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"})
+        with urllib.request.urlopen(req, timeout=8) as resp:
+            html = resp.read().decode("utf-8", errors="ignore")
+        
+        dict_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "leekduck_translated.json")
+        en2tw = {}
+        if os.path.exists(dict_path):
+            with open(dict_path, "r", encoding="utf-8") as f:
+                d = json.load(f)
+                for item in d:
+                    for s in ["1", "2", "3"]:
+                        ens = item.get("slots", {}).get(s, [])
+                        tws = item.get("tw_slots", {}).get(s, [])
+                        for en_p, tw_p in zip(ens, tws):
+                            en2tw[en_p.strip()] = tw_p.strip()
+
+        # 核心神獸與幹部重要怪兜底映射
+        fallback_map = {
+            "Axew": "牙牙", "Tyrunt": "寶寶暴龍", "Amaura": "冰雪龍",
+            "Reshiram": "萊希拉姆", "Zekrom": "捷克羅姆", "Kyurem": "酋雷姆",
+            "Persian": "貓老大", "Snorlax": "卡比獸", "Lapras": "乘龍"
+        }
+        en2tw.update(fallback_map)
+
+        def to_tw(en_name):
+            clean = re.sub(r'\(.*?\)', '', en_name).strip()
+            return en2tw.get(clean, en2tw.get(en_name, en_name))
+
+        leader_keys = {"Cliff": "cliff", "Arlo": "arlo", "Sierra": "sierra", "Giovanni": "giovanni"}
+        profiles = re.split(r'<div class="rocket-profile"', html)[1:]
+        
+        for p in profiles:
+            name_m = re.search(r'<div class="name">(.*?)</div>', p)
+            if not name_m:
+                continue
+            name = name_m.group(1).replace('&nbsp;', ' ').strip()
+            
+            for l_en, l_key in leader_keys.items():
+                if l_en.lower() in name.lower() and l_key in LEADER_ROSTER:
+                    slots_split = re.split(r'<span class="number">([123])</span>', p)
+                    s_map = {'1': [], '2': [], '3': []}
+                    for i in range(1, len(slots_split), 2):
+                        s_idx = slots_split[i]
+                        chunk = slots_split[i+1]
+                        pokes = re.findall(r'data-pokemon="([^"]+)"', chunk)
+                        s_map[s_idx] = [to_tw(x) for x in pokes]
+                    
+                    if s_map['1']:
+                        LEADER_ROSTER[l_key]["first_pokemons"] = s_map['1']
+                        LEADER_ROSTER[l_key]["primary_first"] = " / ".join(s_map['1'])
+                    if s_map['2']:
+                        LEADER_ROSTER[l_key]["second_pokemons"] = s_map['2']
+                    if s_map['3']:
+                        LEADER_ROSTER[l_key]["third_pokemons"] = s_map['3']
+        print("[Auto-Sync] 成功與 LeekDuck 最新賽季陣容保持同步！")
+        return True
+    except Exception as e:
+        print(f"[Auto-Sync] LeekDuck 同步檢查略過 (維持現行穩定字典): {e}")
+        return False
+
