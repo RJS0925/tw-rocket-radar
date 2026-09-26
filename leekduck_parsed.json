@@ -1,0 +1,528 @@
+[
+  {
+    "name": "Giovanni",
+    "quote": "I will not tolerate your interference.",
+    "slots": {
+      "1": [
+        "Persian"
+      ],
+      "2": [
+        "Kangaskhan",
+        "Rhyperior",
+        "Machamp"
+      ],
+      "3": [
+        "Reshiram"
+      ]
+    }
+  },
+  {
+    "name": "Cliff",
+    "quote": "My strength comes from my loyalty to Team GO Rocket.",
+    "slots": {
+      "1": [
+        "Axew"
+      ],
+      "2": [
+        "Snorlax",
+        "Golurk",
+        "Galarian Weezing"
+      ],
+      "3": [
+        "Tyranitar",
+        "Camerupt",
+        "Gallade"
+      ]
+    }
+  },
+  {
+    "name": "Arlo",
+    "quote": "It's time to learn your place in the world.",
+    "slots": {
+      "1": [
+        "Tyrunt"
+      ],
+      "2": [
+        "Steelix",
+        "Golurk",
+        "Slowbro"
+      ],
+      "3": [
+        "Alakazam",
+        "Charizard",
+        "Scizor"
+      ]
+    }
+  },
+  {
+    "name": "Sierra",
+    "quote": "I envy you—you get to battle me!",
+    "slots": {
+      "1": [
+        "Amaura"
+      ],
+      "2": [
+        "Blastoise",
+        "Flygon",
+        "Ferrothorn"
+      ],
+      "3": [
+        "Milotic",
+        "Houndoom",
+        "Steelix"
+      ]
+    }
+  },
+  {
+    "name": "Normal-type Male Grunt",
+    "quote": "Normal does not mean weak.",
+    "slots": {
+      "1": [
+        "Teddiursa",
+        "Hoothoot",
+        "Porygon"
+      ],
+      "2": [
+        "Loudred",
+        "Stufful",
+        "Starly"
+      ],
+      "3": [
+        "Ursaring",
+        "Swellow",
+        "Kangaskhan"
+      ]
+    }
+  },
+  {
+    "name": "Fire-type Female Grunt",
+    "quote": "Do you know how hot Pokémon fire breath can get?",
+    "slots": {
+      "1": [
+        "Litwick",
+        "Ponyta",
+        "Torchic"
+      ],
+      "2": [
+        "Magmar",
+        "Blaziken",
+        "Camerupt"
+      ],
+      "3": [
+        "Darmanitan",
+        "Delphox",
+        "Magmortar"
+      ]
+    }
+  },
+  {
+    "name": "Water-type Female Grunt",
+    "quote": "These waters are treacherous!",
+    "slots": {
+      "1": [
+        "Mudkip",
+        "Tentacool",
+        "Krabby"
+      ],
+      "2": [
+        "Dewpider",
+        "Swampert",
+        "Sharpedo"
+      ],
+      "3": [
+        "Walrein",
+        "Greninja",
+        "Tentacruel"
+      ]
+    }
+  },
+  {
+    "name": "Water-type Male Grunt",
+    "quote": "These waters are treacherous!",
+    "slots": {
+      "1": [
+        "Magikarp",
+        "Feebas"
+      ],
+      "2": [
+        "Magikarp"
+      ],
+      "3": [
+        "Magikarp",
+        "Gyarados"
+      ]
+    }
+  },
+  {
+    "name": "Electric-type Female Grunt",
+    "quote": "Get ready to be shocked!",
+    "slots": {
+      "1": [
+        "Voltorb",
+        "Shinx",
+        "Helioptile"
+      ],
+      "2": [
+        "Electabuzz",
+        "Voltorb",
+        "Alolan Geodude"
+      ],
+      "3": [
+        "Luxray",
+        "Ampharos",
+        "Galvantula"
+      ]
+    }
+  },
+  {
+    "name": "Grass-type Male Grunt",
+    "quote": "Don't tangle with us!",
+    "slots": {
+      "1": [
+        "Phantump",
+        "Treecko",
+        "Tangela"
+      ],
+      "2": [
+        "Lileep",
+        "Sceptile",
+        "Morelull"
+      ],
+      "3": [
+        "Chesnaught",
+        "Trevenant",
+        "Cradily"
+      ]
+    }
+  },
+  {
+    "name": "Ice-type Female Grunt",
+    "quote": "You're gonna be frozen in your tracks.",
+    "slots": {
+      "1": [
+        "Seel",
+        "Delibird",
+        "Spheal"
+      ],
+      "2": [
+        "Sealeo",
+        "Froslass",
+        "Alolan Ninetales"
+      ],
+      "3": [
+        "Aurorus",
+        "Froslass",
+        "Glalie"
+      ]
+    }
+  },
+  {
+    "name": "Fighting-type Female Grunt",
+    "quote": "This buff physique isn't just for show!",
+    "slots": {
+      "1": [
+        "Timburr",
+        "Mankey",
+        "Machop"
+      ],
+      "2": [
+        "Hitmontop",
+        "Hitmonlee",
+        "Hitmonchan"
+      ],
+      "3": [
+        "Conkeldurr",
+        "Annihilape",
+        "Infernape"
+      ]
+    }
+  },
+  {
+    "name": "Poison-type Female Grunt",
+    "quote": "Coiled and ready to strike!",
+    "slots": {
+      "1": [
+        "Oddish",
+        "Zubat",
+        "Qwilfish"
+      ],
+      "2": [
+        "Galarian Weezing",
+        "Nidorino",
+        "Nidorina"
+      ],
+      "3": [
+        "Weezing",
+        "Toxicroak",
+        "Amoonguss"
+      ]
+    }
+  },
+  {
+    "name": "Ground-type Male Grunt",
+    "quote": "You'll be defeated into the ground!",
+    "slots": {
+      "1": [
+        "Rhyhorn",
+        "Gligar",
+        "Trapinch"
+      ],
+      "2": [
+        "Gligar",
+        "Claydol",
+        "Vibrava"
+      ],
+      "3": [
+        "Golurk",
+        "Hippowdon",
+        "Flygon"
+      ]
+    }
+  },
+  {
+    "name": "Flying-type Female Grunt",
+    "quote": "Battle against my Flying-type Pokémon!",
+    "slots": {
+      "1": [
+        "Taillow",
+        "Rookidee",
+        "Swablu"
+      ],
+      "2": [
+        "Scyther",
+        "Zubat",
+        "Gligar"
+      ],
+      "3": [
+        "Dragonite",
+        "Toucannon",
+        "Swanna"
+      ]
+    }
+  },
+  {
+    "name": "Psychic-type Male Grunt",
+    "quote": "Are you scared of psychics that use unseen power?",
+    "slots": {
+      "1": [
+        "Wobbuffet",
+        "Ralts",
+        "Drowzee"
+      ],
+      "2": [
+        "Drowzee",
+        "Duosion",
+        "Wobbuffet"
+      ],
+      "3": [
+        "Gallade",
+        "Malamar",
+        "Reuniclus"
+      ]
+    }
+  },
+  {
+    "name": "Bug-type Male Grunt",
+    "quote": "Go, my super bug Pokémon!",
+    "slots": {
+      "1": [
+        "Venonat",
+        "Weedle",
+        "Grubbin"
+      ],
+      "2": [
+        "Pinsir",
+        "Anorith",
+        "Dewpider"
+      ],
+      "3": [
+        "Scizor",
+        "Scolipede",
+        "Vikavolt"
+      ]
+    }
+  },
+  {
+    "name": "Rock-type Male Grunt",
+    "quote": "Let's rock and roll!",
+    "slots": {
+      "1": [
+        "Onix",
+        "Kabuto",
+        "Cranidos"
+      ],
+      "2": [
+        "Shieldon",
+        "Graveler",
+        "Cranidos"
+      ],
+      "3": [
+        "Tyrantrum",
+        "Golem",
+        "Aurorus"
+      ]
+    }
+  },
+  {
+    "name": "Ghost-type Male Grunt",
+    "quote": "Ke...ke...ke...ke...ke...ke!",
+    "slots": {
+      "1": [
+        "Duskull",
+        "Gastly",
+        "Yamask"
+      ],
+      "2": [
+        "Dusclops",
+        "Sableye",
+        "Cofagrigus"
+      ],
+      "3": [
+        "Gengar",
+        "Froslass",
+        "Cofagrigus"
+      ]
+    }
+  },
+  {
+    "name": "Dragon-type Female Grunt",
+    "quote": "ROAR! ...How'd that sound?",
+    "slots": {
+      "1": [
+        "Noibat",
+        "Deino",
+        "Dratini"
+      ],
+      "2": [
+        "Alolan Exeggutor",
+        "Dragonair",
+        "Gabite"
+      ],
+      "3": [
+        "Dragonite",
+        "Garchomp",
+        "Salamence"
+      ]
+    }
+  },
+  {
+    "name": "Dark-type Female Grunt",
+    "quote": "Wherever there is light, there is also shadow.",
+    "slots": {
+      "1": [
+        "Carvanha",
+        "Poochyena",
+        "Alolan Rattata"
+      ],
+      "2": [
+        "Sneasel",
+        "Houndour",
+        "Absol"
+      ],
+      "3": [
+        "Liepard",
+        "Hydreigon"
+      ]
+    }
+  },
+  {
+    "name": "Steel-type Male Grunt",
+    "quote": "You're no match for my iron will!",
+    "slots": {
+      "1": [
+        "Alolan Sandshrew",
+        "Aron",
+        "Beldum"
+      ],
+      "2": [
+        "Lairon",
+        "Skarmory",
+        "Metang"
+      ],
+      "3": [
+        "Aggron",
+        "Alolan Sandslash",
+        "Probopass"
+      ]
+    }
+  },
+  {
+    "name": "Fairy-type Female Grunt",
+    "quote": "Check out my cute Pokémon!",
+    "slots": {
+      "1": [
+        "Ralts",
+        "Snubbull",
+        "Alolan Vulpix"
+      ],
+      "2": [
+        "Snubbull",
+        "Galarian Weezing",
+        "Kirlia"
+      ],
+      "3": [
+        "Alolan Ninetales",
+        "Galarian Weezing",
+        "Granbull"
+      ]
+    }
+  },
+  {
+    "name": "Male Grunt",
+    "quote": "Winning is for winners.",
+    "slots": {
+      "1": [
+        "Bulbasaur",
+        "Charmander",
+        "Squirtle"
+      ],
+      "2": [
+        "Ivysaur",
+        "Charmeleon",
+        "Wartortle"
+      ],
+      "3": [
+        "Venusaur",
+        "Charizard",
+        "Blastoise"
+      ]
+    }
+  },
+  {
+    "name": "Female Grunt",
+    "quote": "Winning is for winners.",
+    "slots": {
+      "1": [
+        "Snorlax",
+        "Lapras"
+      ],
+      "2": [
+        "Poliwrath",
+        "Gardevoir",
+        "Snorlax"
+      ],
+      "3": [
+        "Gyarados",
+        "Dragonite",
+        "Snorlax"
+      ]
+    }
+  },
+  {
+    "name": "Decoy Female Grunt",
+    "quote": "Fooled ya, twerp.",
+    "slots": {
+      "1": [
+        "Bellsprout"
+      ],
+      "2": [
+        "Raticate",
+        "Weepinbell"
+      ],
+      "3": [
+        "Raticate",
+        "Snorlax"
+      ]
+    }
+  }
+]

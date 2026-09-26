@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全台灣火箭隊即時情報雷達 - 報寶貝 Team GO Rocket</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome 6 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-dark: #0f1117;
+            --card-bg: #1a1c23;
+            --card-border: #2d3139;
+            --rocket-red: #ef4444;
+            --rocket-accent: #dc2626;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            min-height: 100vh;
+        }
+
+        .navbar-custom {
+            background: linear-gradient(135deg, #230808 0%, #1f0b0b 50%, #131418 100%);
+            border-bottom: 2px solid var(--rocket-red);
+            box-shadow: 0 4px 20px rgba(239, 68, 68, 0.2);
+        }
+
+        .rocket-r {
+            display: inline-block;
+            font-weight: 900;
+            color: #fff;
+            background: var(--rocket-red);
+            width: 32px;
+            height: 32px;
+            text-align: center;
+            line-height: 32px;
+            border-radius: 6px;
+            font-size: 1.3rem;
+            box-shadow: 0 0 12px rgba(239, 68, 68, 0.6);
+            letter-spacing: -1px;
+        }
+
+        .brand-title {
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            font-size: 1.25rem;
+            color: #fff;
+        }
+
+        .filter-section {
+            background-color: #16181f;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .type-pill {
+            cursor: pointer;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            background: #232630;
+            border: 1px solid #374151;
+            color: #e5e7eb;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            user-select: none;
+            margin: 3px;
+        }
+
+        .type-pill:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.2);
+            border-color: #9ca3af;
+        }
+
+        .type-pill.active {
+            background-color: var(--rocket-red) !important;
+            color: white !important;
+            border-color: var(--rocket-red) !important;
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+        }
+
+        .rocket-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 16px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .rocket-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            border-color: #4b5563;
+        }
+
+        .rocket-card.is-leader {
+            border: 1px solid rgba(234, 179, 8, 0.5);
+            background: linear-gradient(180deg, #201a2c 0%, #1a1c23 100%);
+            box-shadow: 0 0 15px rgba(234, 179, 8, 0.15);
+        }
+
+        .rocket-card.is-snorlax {
+            border: 1px solid rgba(168, 85, 247, 0.6);
+            background: linear-gradient(180deg, #23182b 0%, #1a1c23 100%);
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.2);
+        }
+
+        .card-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .role-badge {
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 6px;
+            letter-spacing: 0.3px;
+        }
+
+        .badge-female {
+            background-color: rgba(244, 114, 182, 0.2);
+            color: #f472b6;
+            border: 1px solid rgba(244, 114, 182, 0.4);
+        }
+
+        .badge-male {
+            background-color: rgba(96, 165, 250, 0.2);
+            color: #60a5fa;
+            border: 1px solid rgba(96, 165, 250, 0.4);
+        }
+
+        .badge-leader {
+            background-color: rgba(234, 179, 8, 0.2);
+            color: #facc15;
+            border: 1px solid rgba(234, 179, 8, 0.5);
+        }
+
+        .type-badge {
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 6px;
+            color: #ffffff;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+        }
+
+        .time-pill {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #9ca3af;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .time-urgent {
+            color: #f87171 !important;
+            animation: pulse-urgent 1.5s infinite;
+        }
+
+        @keyframes pulse-urgent {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .address-box {
+            font-size: 0.78rem;
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 6px;
+            padding: 4px 8px;
+            margin-bottom: 8px;
+            color: #93c5fd;
+            display: flex;
+            align-items: center;
+        }
+
+        .stop-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .taunt-box {
+            background: rgba(0, 0, 0, 0.3);
+            border-left: 3px solid var(--rocket-red);
+            padding: 5px 8px;
+            border-radius: 0 6px 6px 0;
+            font-size: 0.78rem;
+            color: #d1d5db;
+            margin-bottom: 10px;
+            font-style: italic;
+        }
+
+        .pokemon-box {
+            background: #232630;
+            border-radius: 8px;
+            padding: 10px 12px;
+            margin-bottom: 10px;
+        }
+
+        .pokemon-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .pokemon-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+
+        .first-pokemon {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: #38bdf8;
+            margin-top: 2px;
+        }
+
+        .roster-pool-box {
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 6px;
+            padding: 6px 8px;
+            margin-top: 8px;
+            border-left: 2px solid #38bdf8;
+        }
+
+        .roster-line {
+            font-size: 0.76rem;
+            color: #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .step-badge {
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 1px 5px;
+            border-radius: 3px;
+            background: #334155;
+            color: #94a3b8;
+            min-width: 28px;
+            text-align: center;
+        }
+
+        .step-poke {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .note-text {
+            font-size: 0.76rem;
+            color: #cbd5e1;
+            margin-top: 4px;
+        }
+
+        .catchable-text {
+            font-size: 0.8rem;
+            color: #4ade80;
+            margin-top: 6px;
+        }
+
+        .counter-box {
+            font-size: 0.76rem;
+            color: #facc15;
+            background: rgba(234, 179, 8, 0.08);
+            border-radius: 6px;
+            padding: 5px 8px;
+            margin-bottom: 12px;
+        }
+
+        .btn-copy-coord {
+            font-size: 0.75rem;
+            background: #2a2e39;
+            color: #e5e7eb;
+            border: 1px solid #4b5563;
+            border-radius: 6px;
+            padding: 4px 8px;
+            transition: all 0.15s ease;
+        }
+
+        .btn-copy-coord:hover {
+            background: #374151;
+            color: #fff;
+        }
+
+        .btn-nav {
+            font-size: 0.75rem;
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            border-radius: 6px;
+            padding: 4px 10px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.15s ease;
+        }
+
+        .btn-nav:hover {
+            background: var(--rocket-red);
+            color: white;
+        }
+
+        .stats-badge {
+            background-color: #1f222b;
+            border: 1px solid #374151;
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-size: 0.82rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* 賽季陣容圖鑑手風琴 */
+        .season-roster-card {
+            background: #181b22;
+            border: 1px solid #2d3139;
+            border-radius: 8px;
+            padding: 10px 12px;
+            height: 100%;
+        }
+
+        /* 載入動畫 */
+        .spinner-loading {
+            width: 3rem;
+            height: 3rem;
+            color: var(--rocket-red);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 導覽列 -->
+    <nav class="navbar navbar-expand-lg navbar-custom px-3 py-2 sticky-top">
+        <div class="container-fluid">
+            <div class="d-flex align-items-center gap-2">
+                <span class="rocket-r">R</span>
+                <div>
+                    <div class="brand-title">報寶貝 · 全台灣火箭隊即時情報雷達</div>
+                    <div style="font-size: 0.75rem; color: #f87171;">Taiwan Team GO Rocket Live Radar</div>
+                </div>
+            </div>
+            
+            <div class="d-flex align-items-center gap-2 mt-2 mt-md-0 flex-wrap">
+                <!-- 重新整理按鈕 -->
+                <button id="btnRefresh" class="btn btn-sm btn-outline-danger d-flex align-items-center gap-2">
+                    <i class="fa-solid fa-rotate"></i> <span>重新整理</span>
+                </button>
+
+                <!-- 展開本季屬性陣容圖鑑按鈕 -->
+                <button id="btnToggleSeasonSheet" class="btn btn-sm btn-outline-info d-flex align-items-center gap-2">
+                    <i class="fa-solid fa-book-open"></i> <span>本季各屬性陣容圖鑑</span>
+                </button>
+
+                <!-- 詳細手冊 Modal -->
+                <button class="btn btn-sm btn-outline-warning d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#rosterModal">
+                    <i class="fa-solid fa-circle-info"></i> <span>對戰說明</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid px-4 mt-3">
+
+        <!-- 即時數據看板 -->
+        <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
+            <div class="stats-badge">
+                <i class="fa-solid fa-radar text-danger"></i>
+                <span>目前佔領總數：<strong id="statTotal" class="text-danger">0</strong> 處</span>
+            </div>
+            <div class="stats-badge" style="border-color: #c084fc;">
+                <i class="fa-solid fa-bed text-purple" style="color: #c084fc;"></i>
+                <span>卡比獸/乘龍 (女)：<strong id="statSnorlax" style="color: #c084fc;">0</strong> 處</span>
+            </div>
+            <div class="stats-badge">
+                <i class="fa-solid fa-dragon text-primary"></i>
+                <span>龍屬性 (女)：<strong id="statDragon" class="text-primary">0</strong> 處</span>
+            </div>
+            <div class="stats-badge">
+                <i class="fa-solid fa-crown text-warning"></i>
+                <span>幹部出沒：<strong id="statLeaders" class="text-warning">0</strong> 處</span>
+            </div>
+            <div class="stats-badge ms-auto">
+                <i class="fa-solid fa-clock text-secondary"></i>
+                <span id="updateTimeText" class="text-secondary" style="font-size: 0.8rem;">正在連線報寶貝伺服器...</span>
+            </div>
+        </div>
+
+        <!-- 本季各屬性對戰陣容全圖鑑 (可切換展開/收合專區) -->
+        <div id="seasonRosterSection" class="mb-3 d-none">
+            <div class="p-3 bg-dark border border-info rounded-3">
+                <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-secondary">
+                    <h5 class="text-info mb-0">
+                        <i class="fa-solid fa-book-open me-2"></i>本季各屬性會遇到什麼角色 (賽季全陣容圖鑑)
+                    </h5>
+                    <button class="btn btn-sm btn-outline-secondary" onclick="toggleSeasonSheet()">
+                        <i class="fa-solid fa-xmark"></i> 關閉圖鑑
+                    </button>
+                </div>
+                <div class="alert alert-dark border-secondary small text-light mb-3">
+                    💡 <strong>小提示</strong>：火箭隊小兵在對戰時共出 3 隻。第 1 隻、第 2 隻、第 3 隻皆依照下列屬性陣容池出場；戰勝後絕大多數遭遇捕捉的是<strong>第 1 隻</strong>（少數情況為第 2 隻）！
+                </div>
+                <div id="seasonSheetGrid" class="row g-2">
+                    <!-- JS 動態產生各屬性陣容 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 篩選器與搜尋區塊 -->
+        <div class="filter-section">
+            <div class="row align-items-center g-3">
+                
+                <!-- 地區/縣市篩選選單 (使用者指定核心需求) -->
+                <div class="col-md-3 col-sm-6">
+                    <div class="input-group">
+                        <span class="input-group-text bg-dark border-secondary text-danger"><i class="fa-solid fa-map-location-dot"></i></span>
+                        <select id="countySelect" class="form-select bg-dark text-light border-secondary">
+                            <option value="全部" selected>🗺️ 全台灣 (全部地區)</option>
+                            <!-- JS 動態注入各縣市與即時數量 -->
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 關鍵字搜尋 (補給站、角色、行政區) -->
+                <div class="col-md-3 col-sm-6">
+                    <div class="input-group">
+                        <span class="input-group-text bg-dark border-secondary text-secondary"><i class="fa-solid fa-magnifying-glass"></i></span>
+                        <input type="text" id="searchKeyword" class="form-control bg-dark text-light border-secondary" placeholder="搜尋地標、行政區、寶可夢...">
+                    </div>
+                </div>
+
+                <!-- 捷徑篩選按鈕區 -->
+                <div class="col-md-6 d-flex flex-wrap gap-2 justify-content-md-end align-items-center">
+                    <!-- 省時神按鈕 1：一鍵只看卡比獸/乘龍 (女小兵) -->
+                    <button id="btnSnorlaxOnly" class="btn btn-sm btn-outline-purple d-flex align-items-center gap-1" style="color:#d8b4fe; border-color:#a855f7;" title="只看 卡比獸/乘龍 (女小兵)">
+                        <i class="fa-solid fa-bed"></i> 💤 卡比獸/乘龍 (女小兵)
+                    </button>
+
+                    <!-- 省時神按鈕 2：熱門神怪 (龍/鋼/格鬥) -->
+                    <button id="btnHotRockets" class="btn btn-sm btn-outline-danger d-flex align-items-center gap-1" title="篩選龍系、鋼系、格鬥系、卡比獸等高價值目標">
+                        <i class="fa-solid fa-fire"></i> 🔥 熱門神怪 (龍/鋼/格鬥)
+                    </button>
+
+                    <!-- 幹部按鈕 -->
+                    <button id="btnLeaderOnly" class="btn btn-sm btn-outline-warning d-flex align-items-center gap-1">
+                        <i class="fa-solid fa-crown"></i> 👑 幹部
+                    </button>
+
+                    <!-- 性別切換 -->
+                    <div class="btn-group btn-group-sm" role="group">
+                        <button type="button" class="btn btn-outline-secondary active btn-gender" data-gender="全部">全部性別</button>
+                        <button type="button" class="btn btn-outline-primary btn-gender" data-gender="男小兵 ♂">♂ 男</button>
+                        <button type="button" class="btn btn-outline-pink btn-gender" style="color:#f472b6; border-color:#f472b6;" data-gender="女小兵 ♀">♀ 女</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 屬性標籤清單 -->
+            <div class="mt-3 pt-3 border-top border-secondary">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted);">
+                        <i class="fa-solid fa-tags"></i> 屬性分類篩選：
+                    </span>
+                    <span id="currentTypeLabel" class="badge bg-secondary">顯示全部</span>
+                    <span id="renderedCountBadge" class="text-muted ms-2" style="font-size: 0.8rem;"></span>
+                </div>
+                <div id="typePillsContainer" class="d-flex flex-wrap">
+                    <!-- 由 JS 動態產生各屬性按鈕與計數 -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 火箭隊卡片列表 -->
+        <div id="rocketsGrid" class="row g-3">
+            <!-- 由 JS 渲染 -->
+        </div>
+
+        <!-- 載入更多按鈕 -->
+        <div id="loadMoreSection" class="text-center my-4 d-none">
+            <button id="btnLoadMore" class="btn btn-outline-secondary px-4 py-2">
+                <i class="fa-solid fa-angle-down me-1"></i>載入更多火箭隊
+            </button>
+        </div>
+
+        <!-- 無資料提示 -->
+        <div id="noDataAlert" class="alert alert-dark text-center my-5 d-none border-secondary">
+            <i class="fa-solid fa-circle-exclamation fa-2x text-warning mb-2"></i>
+            <h5>目前篩選條件下沒有找到火箭隊</h5>
+            <p class="text-secondary small mb-0">請嘗試更換縣市地區、切換屬性或清除搜尋關鍵字。</p>
+        </div>
+    </div>
+
+    <!-- 陣容對戰手冊 Modal -->
+    <div class="modal fade" id="rosterModal" tabindex="-1" aria-labelledby="rosterModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content bg-dark text-light border-secondary">
+                <div class="modal-header border-secondary">
+                    <h5 class="modal-title text-warning" id="rosterModalLabel">
+                        <i class="fa-solid fa-book-skull me-2"></i>Team GO Rocket 對戰指南與首發機制
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-dark border-secondary text-light mb-3" style="font-size: 0.88rem;">
+                        <strong>💡 火箭隊第一隻首發機制真相：</strong><br>
+                        1. <strong>女小兵「贏的機率很小/不知道嗎」</strong>：這是遊戲中最著名的<strong>卡比獸女小兵</strong>！首發為<strong>卡比獸</strong>與<strong>乘龍</strong>，兩隻都是極品暗影神怪！<br>
+                        2. <strong>男小兵「贏的機率很小/不知道嗎」</strong>：出的則是初代御三家（妙蛙種子/小火龍/傑尼龜）。<br>
+                        3. <strong>三大幹部 (亞洛/克里夫/希爾拉)</strong>：同一個賽季中，全台灣所有幹部的第 1 隻是<strong>全台統一固定</strong>的（克里夫固定出<strong>牙牙</strong>、亞洛固定出<strong>寶寶暴龍</strong>、希爾拉固定出<strong>冰雪龍</strong>）。<br>
+                        4. <strong>Niantic 伺服器機制</strong>：Niantic 在地圖廣播時只告知小兵角色代碼，在玩家轉盤進入對戰前，伺服器根本還沒為補給站擲骰決定是卡比獸還是乘龍，因此無法隔空提早拆解 2 選 1 的骰子。
+                    </div>
+                    
+                    <div id="rosterContent" class="row g-3">
+                        <!-- 由 JS 渲染手冊資料 -->
+                    </div>
+                </div>
+                <div class="modal-footer border-secondary">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // 屬性顏色對照表
+        const TYPE_COLORS = {
+            "蟲": "#A8B820", "惡": "#705848", "龍": "#7038F8", "電": "#EAB308",
+            "妖精": "#EE99AC", "格鬥": "#C03028", "火": "#F08030", "飛行": "#A890F0",
+            "幽靈": "#705898", "草": "#78C850", "地面": "#E0C068", "冰": "#98D8D8",
+            "一般": "#A8A878", "毒": "#A040A0", "超能": "#F85888", "岩石": "#B8A038",
+            "鋼": "#B8B8D0", "水": "#6890F0", "卡比獸/乘龍": "#a855f7", "初代御三家": "#64748b",
+            "幹部": "#eab308"
+        };
+
+        // 台灣縣市固定列表
+        const TAIWAN_COUNTIES = [
+            "全部", "台北市", "新北市", "基隆市", "桃園市", "新竹市", "新竹縣", "苗栗縣",
+            "台中市", "彰化縣", "南投縣", "雲林縣", "嘉義市", "嘉義縣", "台南市", "高雄市",
+            "屏東縣", "宜蘭縣", "花蓮縣", "台東縣", "澎湖縣", "金門縣", "連江縣"
+        ];
+
+        let allFetchedRockets = [];
+        let filteredRockets = [];
+        let seasonRosterData = null;
+        let selectedType = "全部";
+        let selectedGender = "全部";
+        let selectedCounty = "全部";
+        let snorlaxOnly = false;
+        let leaderOnly = false;
+        let hotOnly = false;
+
+        const BATCH_SIZE = 60;
+        let displayLimit = BATCH_SIZE;
+
+        // 頁面初始化
+        document.addEventListener("DOMContentLoaded", () => {
+            initCountySelect();
+            initEventListeners();
+            loadRockets();
+            loadRosterData();
+
+            // 每 60 秒自動背景抓取最新資訊
+            setInterval(() => {
+                loadRockets(true);
+            }, 60000);
+        });
+
+        // 初始化縣市選單
+        function initCountySelect() {
+            const select = document.getElementById("countySelect");
+            select.innerHTML = "";
+            TAIWAN_COUNTIES.forEach(c => {
+                const opt = document.createElement("option");
+                opt.value = c;
+                opt.innerText = c === "全部" ? "🗺️ 全台灣 (全部地區)" : `📍 ${c}`;
+                select.appendChild(opt);
+            });
+        }
+
+        // 綁定所有事件
+        function initEventListeners() {
+            // 重新整理
+            document.getElementById("btnRefresh").addEventListener("click", () => loadRockets());
+
+            // 縣市地區篩選
+            document.getElementById("countySelect").addEventListener("change", (e) => {
+                selectedCounty = e.target.value;
+                filterAndRender(true);
+            });
+
+            // 展開/收合本季各屬性陣容圖鑑
+            document.getElementById("btnToggleSeasonSheet").addEventListener("click", () => {
+                toggleSeasonSheet();
+            });
+
+            // 關鍵字搜尋 (即時輸入)
+            document.getElementById("searchKeyword").addEventListener("input", () => {
+                filterAndRender(true);
+            });
+
+            // 卡比獸/乘龍 女小兵 按鈕
+            const btnSnorlax = document.getElementById("btnSnorlaxOnly");
+            btnSnorlax.addEventListener("click", () => {
+                snorlaxOnly = !snorlaxOnly;
+                btnSnorlax.classList.toggle("active", snorlaxOnly);
+                if (snorlaxOnly) {
+                    btnSnorlax.style.backgroundColor = "#a855f7";
+                    btnSnorlax.style.color = "#fff";
+                } else {
+                    btnSnorlax.style.backgroundColor = "transparent";
+                    btnSnorlax.style.color = "#d8b4fe";
+                }
+                filterAndRender(true);
+            });
+
+            // 熱門暗影怪 (龍/鋼/格鬥) 按鈕
+            const btnHot = document.getElementById("btnHotRockets");
+            btnHot.addEventListener("click", () => {
+                hotOnly = !hotOnly;
+                btnHot.classList.toggle("active", hotOnly);
+                filterAndRender(true);
+            });
+
+            // 幹部按鈕
+            const btnLeader = document.getElementById("btnLeaderOnly");
+            btnLeader.addEventListener("click", () => {
+                leaderOnly = !leaderOnly;
+                btnLeader.classList.toggle("active", leaderOnly);
+                filterAndRender(true);
+            });
+
+            // 性別按鈕切換
+            document.querySelectorAll(".btn-gender").forEach(btn => {
+                btn.addEventListener("click", (e) => {
+                    document.querySelectorAll(".btn-gender").forEach(b => b.classList.remove("active"));
+                    e.currentTarget.classList.add("active");
+                    selectedGender = e.currentTarget.dataset.gender;
+                    filterAndRender(true);
+                });
+            });
+
+            // 載入更多按鈕
+            document.getElementById("btnLoadMore").addEventListener("click", () => {
+                displayLimit += BATCH_SIZE;
+                filterAndRender(false);
+            });
+        }
+
+        // 切換本季陣容圖鑑展開/收合
+        function toggleSeasonSheet() {
+            const sec = document.getElementById("seasonRosterSection");
+            const btn = document.getElementById("btnToggleSeasonSheet");
+            const isHidden = sec.classList.contains("d-none");
+            if (isHidden) {
+                sec.classList.remove("d-none");
+                btn.classList.add("active");
+                renderSeasonSheet();
+                // 平滑滾動到圖鑑
+                sec.scrollIntoView({ behavior: "smooth", block: "start" });
+            } else {
+                sec.classList.add("d-none");
+                btn.classList.remove("active");
+            }
+        }
+
+        // 從 API 抓取全台資料
+        async function loadRockets(isSilent = false) {
+            const btnRefresh = document.getElementById("btnRefresh");
+            if (!isSilent) {
+                btnRefresh.disabled = true;
+                btnRefresh.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> 掃描中...`;
+            }
+
+            try {
+                const res = await fetch(`/api/rockets?city=全台灣`);
+                const data = await res.json();
+                
+                allFetchedRockets = data.items || [];
+                
+                // 更新統計
+                document.getElementById("statTotal").innerText = data.total;
+                document.getElementById("statSnorlax").innerText = data.snorlax_count;
+                document.getElementById("statDragon").innerText = data.dragon_count;
+                document.getElementById("statLeaders").innerText = data.leaders_count;
+                document.getElementById("updateTimeText").innerText = `最後更新：${new Date().toLocaleTimeString()} (共 ${data.total} 處)`;
+
+                // 更新縣市選單計數
+                updateCountySelectCounts(data.county_counts || {});
+
+                renderTypePills(data.type_counts);
+                filterAndRender(true);
+            } catch (err) {
+                console.error("載入失敗:", err);
+                showToast("連線報寶貝伺服器逾時，請稍後重試！");
+            } finally {
+                btnRefresh.disabled = false;
+                btnRefresh.innerHTML = `<i class="fa-solid fa-rotate"></i> <span>重新整理</span>`;
+            }
+        }
+
+        // 更新縣市選單的即時計數
+        function updateCountySelectCounts(countyCounts) {
+            const select = document.getElementById("countySelect");
+            Array.from(select.options).forEach(opt => {
+                const val = opt.value;
+                if (val === "全部") {
+                    opt.innerText = `🗺️ 全台灣 (全部 ${allFetchedRockets.length} 處)`;
+                } else {
+                    const count = countyCounts[val] || 0;
+                    opt.innerText = `📍 ${val} (${count} 處)`;
+                }
+            });
+        }
+
+        // 渲染屬性按鈕
+        function renderTypePills(typeCounts) {
+            const container = document.getElementById("typePillsContainer");
+            container.innerHTML = "";
+
+            // "全部" 按鈕
+            const allPill = document.createElement("div");
+            allPill.className = `type-pill ${selectedType === "全部" ? "active" : ""}`;
+            allPill.innerHTML = `全部 (${allFetchedRockets.length})`;
+            allPill.onclick = () => selectTypeFilter("全部");
+            container.appendChild(allPill);
+
+            // 卡比獸/乘龍 女小兵 按鈕 (優先突顯)
+            const snorlaxCount = allFetchedRockets.filter(r => r.type_name.includes("卡比獸")).length;
+            const snorlaxPill = document.createElement("div");
+            snorlaxPill.className = `type-pill ${selectedType.includes("卡比獸") ? "active" : ""}`;
+            snorlaxPill.style.borderLeft = `4px solid #a855f7`;
+            snorlaxPill.style.color = "#d8b4fe";
+            snorlaxPill.innerHTML = `💤 卡比獸/乘龍 (${snorlaxCount})`;
+            snorlaxPill.onclick = () => selectTypeFilter("卡比獸/乘龍");
+            container.appendChild(snorlaxPill);
+
+            // 幹部按鈕
+            const leaderCount = allFetchedRockets.filter(r => r.is_leader).length;
+            const leaderPill = document.createElement("div");
+            leaderPill.className = `type-pill ${selectedType === "幹部" ? "active" : ""}`;
+            leaderPill.style.borderColor = "#eab308";
+            leaderPill.innerHTML = `👑 幹部 (${leaderCount})`;
+            leaderPill.onclick = () => selectTypeFilter("幹部");
+            container.appendChild(leaderPill);
+
+            // 各屬性按鈕
+            const sortedTypes = Object.entries(typeCounts).sort((a, b) => b[1] - a[1]);
+            for (const [tName, count] of sortedTypes) {
+                if (tName === "幹部" || tName.includes("卡比獸")) continue;
+                const pill = document.createElement("div");
+                const color = TYPE_COLORS[tName] || "#4b5563";
+                pill.className = `type-pill ${selectedType === tName ? "active" : ""}`;
+                pill.style.borderLeft = `4px solid ${color}`;
+                pill.innerHTML = `${tName} (${count})`;
+                pill.onclick = () => selectTypeFilter(tName);
+                container.appendChild(pill);
+            }
+        }
+
+        function selectTypeFilter(tName) {
+            selectedType = tName;
+            document.getElementById("currentTypeLabel").innerText = tName === "全部" ? "顯示全部" : `篩選：${tName}`;
+            
+            document.querySelectorAll(".type-pill").forEach(p => {
+                p.classList.remove("active");
+                if (p.innerText.startsWith(tName) || (tName.includes("卡比獸") && p.innerText.includes("卡比獸"))) {
+                    p.classList.add("active");
+                }
+            });
+
+            filterAndRender(true);
+        }
+
+        // 篩選與渲染卡片
+        function filterAndRender(resetLimit = false) {
+            if (resetLimit) {
+                displayLimit = BATCH_SIZE;
+            }
+
+            const keyword = document.getElementById("searchKeyword").value.trim().toLowerCase();
+            const hotTypes = ["卡比獸", "幹部", "龍", "鋼", "格鬥", "妖精"];
+
+            filteredRockets = allFetchedRockets.filter(r => {
+                // 縣市/地區篩選
+                if (selectedCounty !== "全部") {
+                    if (r.county !== selectedCounty && r.region_group !== selectedCounty) {
+                        return false;
+                    }
+                }
+
+                // 屬性過濾
+                if (selectedType !== "全部") {
+                    if (selectedType === "幹部" && !r.is_leader) return false;
+                    if (selectedType.includes("卡比獸") && !r.type_name.includes("卡比獸")) return false;
+                    if (selectedType !== "幹部" && !selectedType.includes("卡比獸") && !r.type_name.includes(selectedType)) return false;
+                }
+
+                // 專屬卡比獸快篩
+                if (snorlaxOnly && !r.type_name.includes("卡比獸")) return false;
+
+                // 熱門暗影怪快篩
+                if (hotOnly) {
+                    const isHot = r.is_leader || hotTypes.some(k => r.type_name.includes(k));
+                    if (!isHot) return false;
+                }
+
+                // 性別過濾
+                if (selectedGender !== "全部") {
+                    if (!r.gender.includes(selectedGender.replace("♂", "").replace("♀", "").trim())) return false;
+                }
+
+                // 幹部專屬篩選
+                if (leaderOnly && !r.is_leader) return false;
+
+                // 關鍵字搜尋 (補給站名稱、台詞、角色、縣市、行政區、詳細地址)
+                if (keyword) {
+                    const matchName = (r.name || "").toLowerCase().includes(keyword);
+                    const matchTitle = (r.title || "").toLowerCase().includes(keyword);
+                    const matchPoke = (r.first_pokemon_display || "").toLowerCase().includes(keyword);
+                    const matchAddr = (r.full_address || "").toLowerCase().includes(keyword);
+                    const matchDist = (r.district || "").toLowerCase().includes(keyword);
+                    const matchCounty = (r.county || "").toLowerCase().includes(keyword);
+                    if (!matchName && !matchTitle && !matchPoke && !matchAddr && !matchDist && !matchCounty) return false;
+                }
+
+                return true;
+            });
+
+            const grid = document.getElementById("rocketsGrid");
+            const noData = document.getElementById("noDataAlert");
+            const loadMoreSection = document.getElementById("loadMoreSection");
+            const countBadge = document.getElementById("renderedCountBadge");
+
+            if (filteredRockets.length === 0) {
+                grid.innerHTML = "";
+                noData.classList.remove("d-none");
+                loadMoreSection.classList.add("d-none");
+                countBadge.innerText = "";
+                return;
+            }
+
+            noData.classList.add("d-none");
+
+            const toShow = filteredRockets.slice(0, displayLimit);
+            grid.innerHTML = toShow.map(r => renderRocketCard(r)).join("");
+
+            countBadge.innerText = `(已顯示 ${toShow.length} / 共 ${filteredRockets.length} 處)`;
+
+            if (filteredRockets.length > displayLimit) {
+                loadMoreSection.classList.remove("d-none");
+            } else {
+                loadMoreSection.classList.add("d-none");
+            }
+        }
+
+        // 渲染單張火箭隊卡片
+        function renderRocketCard(r) {
+            const typeColor = TYPE_COLORS[r.type_name] || r.type_color || "#e53935";
+            let roleBadgeClass = "badge-male";
+            let roleIcon = '<i class="fa-solid fa-mars"></i>';
+
+            if (r.is_leader) {
+                roleBadgeClass = "badge-leader";
+                roleIcon = '<i class="fa-solid fa-crown"></i>';
+            } else if (r.gender.includes("女")) {
+                roleBadgeClass = "badge-female";
+                roleIcon = '<i class="fa-solid fa-venus"></i>';
+            }
+
+            const isUrgent = r.remaining_seconds < 300;
+            const timeClass = isUrgent ? "time-pill time-urgent" : "time-pill";
+            const isSnorlax = r.type_name && r.type_name.includes("卡比獸");
+
+            // 賽季陣容三隻文字
+            const firstPoolStr = (r.first_pokemons_pool || []).slice(0, 3).join(" / ") || r.first_pokemon_display;
+            const secondPoolStr = (r.second_pokemons && r.second_pokemons.length > 0) ? r.second_pokemons.slice(0, 3).join(" / ") : "同屬性隨機";
+            const thirdPoolStr = (r.third_pokemons && r.third_pokemons.length > 0) ? r.third_pokemons.slice(0, 3).join(" / ") : "最終主力輪替";
+            const catchableStr = (r.catchable || []).slice(0, 3).join(", ") || "暗影寶可夢";
+
+            // 詳細地址與縣市行政區
+            const displayAddress = r.full_address || `${r.county || ''}${r.district || ''} · ${r.name || ''}`;
+
+            return `
+                <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+                    <div class="rocket-card ${r.is_leader ? 'is-leader' : ''} ${isSnorlax ? 'is-snorlax' : ''}">
+                        <div>
+                            <!-- 卡片標題列 -->
+                            <div class="card-header-row">
+                                <div class="d-flex align-items-center gap-2">
+                                    <span class="role-badge ${roleBadgeClass}">
+                                        ${roleIcon} ${r.gender}
+                                    </span>
+                                    <span class="type-badge" style="background-color: ${typeColor};">
+                                        ${r.type_name}
+                                    </span>
+                                </div>
+                                <span class="${timeClass}">
+                                    <i class="fa-regular fa-clock me-1"></i>${r.remaining_text}
+                                </span>
+                            </div>
+
+                            <!-- 詳細地址與縣市行政區標籤 (點擊直接複製純座標) -->
+                            <div class="address-box" style="cursor: pointer;" onclick="copyCoordinates(${r.lat}, ${r.lng})" title="點擊直接複製純座標 (${r.lat.toFixed(6)}, ${r.lng.toFixed(6)})">
+                                <i class="fa-solid fa-location-dot text-danger me-1"></i>
+                                <span class="text-white fw-bold me-1">${r.county || ''} ${r.district || ''}</span>
+                                <span class="text-secondary">|</span>
+                                <span class="text-info ms-1 text-truncate">${r.name || '補給站'}</span>
+                                <i class="fa-regular fa-copy ms-auto text-secondary" style="font-size: 0.75rem;" title="複製純座標"></i>
+                            </div>
+
+                            <!-- 補給站名稱 -->
+                            <div class="stop-title" title="${r.name}">
+                                ${r.name || "未知補給站"}
+                            </div>
+
+                            <!-- 火箭隊台詞 -->
+                            <div class="taunt-box">
+                                「${r.taunt}」
+                            </div>
+
+                            <!-- 第一隻出場角色與本季三隻陣容預覽 -->
+                            <div class="pokemon-box">
+                                <div class="pokemon-header">
+                                    <span class="pokemon-label">
+                                        <i class="fa-solid fa-bullseye text-danger me-1"></i>第 1 隻出場角色
+                                    </span>
+                                </div>
+                                <div class="first-pokemon">
+                                    ${r.first_pokemon_display}
+                                </div>
+                                <div class="note-text">
+                                    <i class="fa-solid fa-circle-info text-info me-1"></i>${r.certainty_note}
+                                </div>
+
+                                <!-- 本季三隻出場預覽池 -->
+                                <div class="roster-pool-box">
+                                    <div class="roster-line">
+                                        <span class="step-badge">第1隻</span>
+                                        <span class="step-poke">${firstPoolStr}</span>
+                                    </div>
+                                    <div class="roster-line mt-1">
+                                        <span class="step-badge">第2隻</span>
+                                        <span class="step-poke">${secondPoolStr}</span>
+                                    </div>
+                                    <div class="roster-line mt-1">
+                                        <span class="step-badge">第3隻</span>
+                                        <span class="step-poke">${thirdPoolStr}</span>
+                                    </div>
+                                </div>
+
+                                <div class="catchable-text">
+                                    <i class="fa-solid fa-gift text-success me-1"></i><strong>可捕捉遭遇：</strong>${catchableStr}
+                                </div>
+                            </div>
+
+                            <!-- 剋制推薦 -->
+                            <div class="counter-box">
+                                <i class="fa-solid fa-shield-halved me-1"></i><strong>推薦剋制：</strong>${r.counters[0] || "依屬性剋制"}
+                            </div>
+                        </div>
+
+                        <!-- 底部按鈕 -->
+                        <div class="d-flex justify-content-between align-items-center pt-2 border-top border-secondary">
+                            <button class="btn-copy-coord" onclick="copyCoordinates(${r.lat}, ${r.lng})" title="只複製純經緯度數字">
+                                <i class="fa-regular fa-copy me-1"></i>複製純座標
+                            </button>
+                            <a href="${r.gmaps_url}" target="_blank" class="btn-nav">
+                                <i class="fa-solid fa-location-arrow"></i>地圖導航
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 載入賽季陣容資料庫
+        async function loadRosterData() {
+            try {
+                const res = await fetch("/api/roster");
+                seasonRosterData = await res.json();
+                renderRosterModal(seasonRosterData);
+            } catch (err) {
+                console.error("無法載入對戰手冊:", err);
+            }
+        }
+
+        // 渲染本季各屬性出怪對照圖鑑 (頁面頂部展開專區)
+        function renderSeasonSheet() {
+            if (!seasonRosterData) return;
+            const container = document.getElementById("seasonSheetGrid");
+            container.innerHTML = "";
+
+            // 1. 先列出幹部
+            for (const [lKey, lData] of Object.entries(seasonRosterData.leaders)) {
+                const col = document.createElement("div");
+                col.className = "col-12 col-md-6 col-lg-4";
+                col.innerHTML = `
+                    <div class="season-roster-card" style="border-left: 4px solid #eab308;">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <strong class="text-warning fs-6"><i class="fa-solid fa-crown me-1"></i>${lData.title}</strong>
+                            <span class="badge bg-warning text-dark">幹部</span>
+                        </div>
+                        <div class="small text-muted mb-2">台詞：「${lData.taunt}」</div>
+                        <div class="small mb-1"><span class="badge bg-secondary me-1">1</span><strong>第 1 隻：</strong><span class="text-info">${lData.first_pokemons.join(" / ")}</span></div>
+                        <div class="small mb-1"><span class="badge bg-secondary me-1">2</span><strong>第 2 隻：</strong><span class="text-light">${(lData.second_pokemons || []).join(" / ")}</span></div>
+                        <div class="small mb-1"><span class="badge bg-secondary me-1">3</span><strong>第 3 隻：</strong><span class="text-light">${(lData.third_pokemons || []).join(" / ")}</span></div>
+                        <div class="small text-success mb-1"><strong>🎁 遭遇捕捉：</strong>${lData.catchable.join(", ")}</div>
+                        <div class="small text-warning"><strong>🛡️ 剋制推薦：</strong>${lData.counters.join("；")}</div>
+                    </div>
+                `;
+                container.appendChild(col);
+            }
+
+            // 2. 列出各屬性小兵
+            for (const g of seasonRosterData.grunts) {
+                const col = document.createElement("div");
+                col.className = "col-12 col-md-6 col-lg-4";
+                const borderCol = g.type_color || "#4b5563";
+                col.innerHTML = `
+                    <div class="season-roster-card" style="border-left: 4px solid ${borderCol};">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <strong style="color: ${borderCol};" class="fs-6">${g.title}</strong>
+                            <span class="badge bg-secondary">${g.gender}</span>
+                        </div>
+                        <div class="small text-muted mb-2">台詞：「${g.taunt}」</div>
+                        <div class="small mb-1"><span class="badge bg-secondary me-1">1</span><strong>第 1 隻：</strong><span class="text-info">${g.first_pokemons.join(" / ")}</span></div>
+                        <div class="small mb-1"><span class="badge bg-secondary me-1">2</span><strong>第 2 隻：</strong><span class="text-light">${(g.second_pokemons && g.second_pokemons.length > 0) ? g.second_pokemons.join(" / ") : "同屬性輪替"}</span></div>
+                        <div class="small mb-1"><span class="badge bg-secondary me-1">3</span><strong>第 3 隻：</strong><span class="text-light">${(g.third_pokemons && g.third_pokemons.length > 0) ? g.third_pokemons.join(" / ") : "同屬性進化/主力"}</span></div>
+                        <div class="small text-success mb-1"><strong>🎁 遭遇捕捉：</strong>${g.catchable.join(", ")}</div>
+                        <div class="small text-warning"><strong>🛡️ 剋制推薦：</strong>${g.counters.join("；")}</div>
+                    </div>
+                `;
+                container.appendChild(col);
+            }
+        }
+
+        // 渲染 Modal 內容
+        function renderRosterModal(data) {
+            const container = document.getElementById("rosterContent");
+            if (!container) return;
+            
+            let html = "";
+            
+            // 幹部專區
+            html += `<div class="col-12"><h5 class="text-warning border-bottom border-warning pb-2"><i class="fa-solid fa-crown me-2"></i>火箭隊幹部與最高首領 (全台統一固定第 1 隻)</h5></div>`;
+            for (const [lKey, lData] of Object.entries(data.leaders)) {
+                html += `
+                    <div class="col-md-6 col-lg-4">
+                        <div class="p-3 bg-black rounded border border-warning" style="height: 100%;">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <strong class="text-warning fs-5">${lData.title}</strong>
+                                <span class="badge bg-success">賽季固定</span>
+                            </div>
+                            <div class="text-muted small mb-2">台詞：「${lData.taunt}」</div>
+                            <div class="small text-info mb-1"><strong>第 1 隻出場：</strong>${lData.primary_first}</div>
+                            <div class="small text-muted mb-1">說明：${lData.certainty_note}</div>
+                            <div class="small text-success mb-1"><strong>可遭遇暗影：</strong>${lData.catchable.join(", ")}</div>
+                            <div class="small text-danger"><strong>推薦剋制：</strong>${lData.counters.join("；")}</div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // 小兵專區
+            html += `<div class="col-12 mt-4"><h5 class="text-danger border-bottom border-danger pb-2"><i class="fa-solid fa-users me-2"></i>各屬性男女小兵出場角色指南</h5></div>`;
+            for (const g of data.grunts) {
+                html += `
+                    <div class="col-md-6 col-lg-4">
+                        <div class="p-3 bg-black rounded border border-secondary" style="height: 100%;">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <strong style="color: ${g.type_color};">${g.title}</strong>
+                                <span class="badge bg-secondary">${g.gender}</span>
+                            </div>
+                            <div class="text-muted small mb-2">台詞：「${g.taunt}」</div>
+                            <div class="small text-info mb-1"><strong>第 1 隻陣容：</strong>${g.first_pokemons.join(" / ")}</div>
+                            <div class="small text-light mb-1"><strong>第 2 隻陣容：</strong>${(g.second_pokemons || []).join(" / ") || "同屬性輪替"}</div>
+                            <div class="small text-light mb-1"><strong>第 3 隻陣容：</strong>${(g.third_pokemons || []).join(" / ") || "同屬性主力"}</div>
+                            <div class="small text-success mb-1"><strong>可遭遇暗影：</strong>${g.catchable.join(", ")}</div>
+                            <div class="small text-warning"><strong>剋制推薦：</strong>${g.counters.join("；")}</div>
+                        </div>
+                    </div>
+                `;
+            }
+            container.innerHTML = html;
+        }
+
+        // 複製純座標 (只保留經緯度數字，不帶任何中文或標籤，方便直接貼入工具或地圖)
+        function copyCoordinates(lat, lng) {
+            const str = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+            navigator.clipboard.writeText(str).then(() => {
+                showToast(`已複製純座標：\n${str}`);
+            }).catch(() => {
+                prompt("請手動複製純座標：", str);
+            });
+        }
+
+        // 簡易 Toast 提示
+        function showToast(message) {
+            const toast = document.createElement("div");
+            toast.className = "position-fixed bottom-0 end-0 p-3";
+            toast.style.zIndex = "9999";
+            toast.innerHTML = `
+                <div class="toast show bg-dark text-light border border-secondary shadow-lg" role="alert">
+                    <div class="toast-body d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-circle-check text-success"></i>
+                        <span style="white-space: pre-line;">${message}</span>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2600);
+        }
+    </script>
+</body>
+</html>

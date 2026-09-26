@@ -1,0 +1,950 @@
+[
+  {
+    "name": "Giovanni",
+    "quote": "I will not tolerate your interference.",
+    "slots": {
+      "1": [
+        "Persian"
+      ],
+      "2": [
+        "Kangaskhan",
+        "Rhyperior",
+        "Machamp"
+      ],
+      "3": [
+        "Reshiram"
+      ]
+    },
+    "tw_slots": {
+      "1": [
+        "貓老大"
+      ],
+      "2": [
+        "袋獸",
+        "超甲狂犀",
+        "怪力"
+      ],
+      "3": [
+        "萊希拉姆"
+      ]
+    }
+  },
+  {
+    "name": "Cliff",
+    "quote": "My strength comes from my loyalty to Team GO Rocket.",
+    "slots": {
+      "1": [
+        "Axew"
+      ],
+      "2": [
+        "Snorlax",
+        "Golurk",
+        "Galarian Weezing"
+      ],
+      "3": [
+        "Tyranitar",
+        "Camerupt",
+        "Gallade"
+      ]
+    },
+    "tw_slots": {
+      "1": [
+        "牙牙"
+      ],
+      "2": [
+        "卡比獸",
+        "泥偶巨人",
+        "伽勒爾雙彈瓦斯"
+      ],
+      "3": [
+        "班基拉斯",
+        "噴火駝",
+        "艾路雷朵"
+      ]
+    }
+  },
+  {
+    "name": "Arlo",
+    "quote": "It's time to learn your place in the world.",
+    "slots": {
+      "1": [
+        "Tyrunt"
+      ],
+      "2": [
+        "Steelix",
+        "Golurk",
+        "Slowbro"
+      ],
+      "3": [
+        "Alakazam",
+        "Charizard",
+        "Scizor"
+      ]
+    },
+    "tw_slots": {
+      "1": [
+        "寶寶暴龍"
+      ],
+      "2": [
+        "大鋼蛇",
+        "泥偶巨人",
+        "呆殼獸"
+      ],
+      "3": [
+        "胡地",
+        "噴火龍",
+        "巨鉗螳螂"
+      ]
+    }
+  },
+  {
+    "name": "Sierra",
+    "quote": "I envy you—you get to battle me!",
+    "slots": {
+      "1": [
+        "Amaura"
+      ],
+      "2": [
+        "Blastoise",
+        "Flygon",
+        "Ferrothorn"
+      ],
+      "3": [
+        "Milotic",
+        "Houndoom",
+        "Steelix"
+      ]
+    },
+    "tw_slots": {
+      "1": [
+        "冰雪龍"
+      ],
+      "2": [
+        "水箭龜",
+        "沙漠蜻蜓",
+        "堅果啞鈴"
+      ],
+      "3": [
+        "美納斯",
+        "黑魯加",
+        "大鋼蛇"
+      ]
+    }
+  },
+  {
+    "name": "Normal-type Male Grunt",
+    "quote": "Normal does not mean weak.",
+    "slots": {
+      "1": [
+        "Teddiursa",
+        "Hoothoot",
+        "Porygon"
+      ],
+      "2": [
+        "Loudred",
+        "Stufful",
+        "Starly"
+      ],
+      "3": [
+        "Ursaring",
+        "Swellow",
+        "Kangaskhan"
+      ]
+    },
+    "tw_slots": {
+      "1": [
+        "熊寶寶",
+        "咕咕",
+        "多邊獸"
+      ],
+      "2": [
+        "吼爆彈",
+        "童偶熊",
+        "姆克兒"
+      ],
+      "3": [
+        "圈圈熊",
+        "大王燕",
+        "袋獸"
+      ]
+    }
+  },
+  {
+    "name": "Fire-type Female Grunt",
+    "quote": "Do you know how hot Pokémon fire breath can get?",
+    "slots": {
+      "1": [
+        "Litwick",
+        "Ponyta",
+        "Torchic"
+      ],
+      "2": [
+        "Magmar",
+        "Blaziken",
+        "Camerupt"
+      ],
+      "3": [
+        "Darmanitan",
+        "Delphox",
+        "Magmortar"
+      ]
+    },
+    "tw_slots": {
+      "1": [
+        "燭光靈",
+        "小火馬",
+        "火稚雞"
+      ],
+      "2": [
+        "鴨嘴火獸",
+        "火焰雞",
+        "噴火駝"
+      ],
+      "3": [
+        "達摩狒狒",
+        "妖火紅狐",
+        "鴨嘴炎獸"
+      ]
+    }
+  },
+  {
+    "name": "Water-type Female Grunt",
+    "quote": "These waters are treacherous!",
+    "slots": {
+      "1": [
+        "Mudkip",
+        "Tentacool",
+        "Krabby"
+      ],
+      "2": [
+        "Dewpider",
+        "Swampert",
+        "Sharpedo"
+      ],
+      "3": [
+        "Walrein",
+        "Greninja",
+        "Tentacruel"
+      ]
+    },
+    "tw_slots": {
+      "1": [
+        "水躍魚",
+        "瑪瑙水母",
+        "大鉗蟹"
+      ],
+      "2": [
+        "滴蛛",
+        "巨沼怪",
+        "巨牙鯊"
+      ],
+      "3": [
+        "帝牙海獅",
+        "甲賀忍蛙",
+        "毒刺水母"
+      ]
+    }
+  },
+  {
+    "name": "Water-type Male Grunt",
+    "quote": "These waters are treacherous!",
+    "slots": {
+      "1": [
+        "Magikarp",
+        "Feebas"
+      ],
+      "2": [
+        "Magikarp"
+      ],
+      "3": [
+        "Magikarp",
+        "Gyarados"
+      ]
+    },
+    "tw_slots": {
+      "1": [
+        "鯉魚王",
+        "醜醜魚"
+      ],
+      "2": [
+        "鯉魚王"
+      ],
+      "3": [
+        "鯉魚王",
+        "暴鯉龍"
+      ]
+    }
+  },
+  {
+    "name": "Electric-type Female Grunt",
+    "quote": "Get ready to be shocked!",
+    "slots": {
+      "1": [
+        "Voltorb",
+        "Shinx",
+        "Helioptile"
+      ],
+      "2": [
+        "Electabuzz",
+        "Voltorb",
+        "Alolan Geodude"
+      ],
+      "3": [
+        "Luxray",
+        "Ampharos",
+        "Galvantula"
+      ]
+    },
+    "tw_slots": {
+      "1": [
+        "霹靂電球",
+        "小貓怪",
+        "傘電蜥"
+      ],
+      "2": [
+        "電擊獸",
+        "霹靂電球",
+        "阿羅拉小拳石"
+      ],
+      "3": [
+        "倫琴貓",
+        "電龍",
+        "電蜘蛛"
+      ]
+    }
+  },
+  {
+    "name": "Grass-type Male Grunt",
+    "quote": "Don't tangle with us!",
+    "slots": {
+      "1": [
+        "Phantump",
+        "Treecko",
+        "Tangela"
+      ],
+      "2": [
+        "Lileep",
+        "Sceptile",
+        "Morelull"
+      ],
+      "3": [
+        "Chesnaught",
+        "Trevenant",
+        "Cradily"
+      ]
+    },
+    "tw_slots": {
+      "1": [
+        "小木靈",
+        "木守宮",
+        "蔓藤怪"
+      ],
+      "2": [
+        "觸手百合",
+        "蜥蜴王",
+        "睡睡菇"
+      ],
+      "3": [
+        "布里卡隆",
+        "朽木妖",
+        "搖籃百合"
+      ]
+    }
+  },
+  {
+    "name": "Ice-type Female Grunt",
+    "quote": "You're gonna be frozen in your tracks.",
+    "slots": {
+      "1": [
+        "Seel",
+        "Delibird",
+        "Spheal"
+      ],
+      "2": [
+        "Sealeo",
+        "Froslass",
+        "Alolan Ninetales"
+      ],
+      "3": [
+        "Aurorus",
+        "Froslass",
+        "Glalie"
+      ]
+    },
+    "tw_slots": {
+      "1": [
+        "小海獅",
+        "信使鳥",
+        "海豹球"
+      ],
+      "2": [
+        "海魔獅",
+        "雪妖女",
+        "阿羅拉九尾"
+      ],
+      "3": [
+        "冰雪巨龍",
+        "雪妖女",
+        "冰鬼護"
+      ]
+    }
+  },
+  {
+    "name": "Fighting-type Female Grunt",
+    "quote": "This buff physique isn't just for show!",
+    "slots": {
+      "1": [
+        "Timburr",
+        "Mankey",
+        "Machop"
+      ],
+      "2": [
+        "Hitmontop",
+        "Hitmonlee",
+        "Hitmonchan"
+      ],
+      "3": [
+        "Conkeldurr",
+        "Annihilape",
+        "Infernape"
+      ]
+    },
+    "tw_slots": {
+      "1": [
+        "搬運小匠",
+        "猴怪",
+        "腕力"
+      ],
+      "2": [
+        "戰舞郎",
+        "飛腿郎",
+        "快拳郎"
+      ],
+      "3": [
+        "修建老匠",
+        "棄世猴",
+        "烈焰猴"
+      ]
+    }
+  },
+  {
+    "name": "Poison-type Female Grunt",
+    "quote": "Coiled and ready to strike!",
+    "slots": {
+      "1": [
+        "Oddish",
+        "Zubat",
+        "Qwilfish"
+      ],
+      "2": [
+        "Galarian Weezing",
+        "Nidorino",
+        "Nidorina"
+      ],
+      "3": [
+        "Weezing",
+        "Toxicroak",
+        "Amoonguss"
+      ]
+    },
+    "tw_slots": {
+      "1": [
+        "走路草",
+        "超音蝠",
+        "千針魚"
+      ],
+      "2": [
+        "伽勒爾雙彈瓦斯",
+        "尼多力諾",
+        "尼多娜"
+      ],
+      "3": [
+        "雙彈瓦斯",
+        "毒骷蛙",
+        "敗露球菇"
+      ]
+    }
+  },
+  {
+    "name": "Ground-type Male Grunt",
+    "quote": "You'll be defeated into the ground!",
+    "slots": {
+      "1": [
+        "Rhyhorn",
+        "Gligar",
+        "Trapinch"
+      ],
+      "2": [
+        "Gligar",
+        "Claydol",
+        "Vibrava"
+      ],
+      "3": [
+        "Golurk",
+        "Hippowdon",
+        "Flygon"
+      ]
+    },
+    "tw_slots": {
+      "1": [
+        "獨角犀牛",
+        "天蠍",
+        "大顎蟻"
+      ],
+      "2": [
+        "天蠍",
+        "念力土偶",
+        "超音波幼蟲"
+      ],
+      "3": [
+        "泥偶巨人",
+        "河馬獸",
+        "沙漠蜻蜓"
+      ]
+    }
+  },
+  {
+    "name": "Flying-type Female Grunt",
+    "quote": "Battle against my Flying-type Pokémon!",
+    "slots": {
+      "1": [
+        "Taillow",
+        "Rookidee",
+        "Swablu"
+      ],
+      "2": [
+        "Scyther",
+        "Zubat",
+        "Gligar"
+      ],
+      "3": [
+        "Dragonite",
+        "Toucannon",
+        "Swanna"
+      ]
+    },
+    "tw_slots": {
+      "1": [
+        "傲骨燕",
+        "稚山雀",
+        "青綿鳥"
+      ],
+      "2": [
+        "飛天螳螂",
+        "超音蝠",
+        "天蠍"
+      ],
+      "3": [
+        "快龍",
+        "銃嘴大鳥",
+        "舞天鵝"
+      ]
+    }
+  },
+  {
+    "name": "Psychic-type Male Grunt",
+    "quote": "Are you scared of psychics that use unseen power?",
+    "slots": {
+      "1": [
+        "Wobbuffet",
+        "Ralts",
+        "Drowzee"
+      ],
+      "2": [
+        "Drowzee",
+        "Duosion",
+        "Wobbuffet"
+      ],
+      "3": [
+        "Gallade",
+        "Malamar",
+        "Reuniclus"
+      ]
+    },
+    "tw_slots": {
+      "1": [
+        "果然翁",
+        "拉魯拉絲",
+        "催眠貘"
+      ],
+      "2": [
+        "催眠貘",
+        "雙卵細胞球",
+        "果然翁"
+      ],
+      "3": [
+        "艾路雷朵",
+        "烏賊王",
+        "人造細胞卵"
+      ]
+    }
+  },
+  {
+    "name": "Bug-type Male Grunt",
+    "quote": "Go, my super bug Pokémon!",
+    "slots": {
+      "1": [
+        "Venonat",
+        "Weedle",
+        "Grubbin"
+      ],
+      "2": [
+        "Pinsir",
+        "Anorith",
+        "Dewpider"
+      ],
+      "3": [
+        "Scizor",
+        "Scolipede",
+        "Vikavolt"
+      ]
+    },
+    "tw_slots": {
+      "1": [
+        "毛球",
+        "獨角蟲",
+        "強壁蟲"
+      ],
+      "2": [
+        "凱羅斯",
+        "太古羽蟲",
+        "滴蛛"
+      ],
+      "3": [
+        "巨鉗螳螂",
+        "車輪毬",
+        "鍬農炮蟲"
+      ]
+    }
+  },
+  {
+    "name": "Rock-type Male Grunt",
+    "quote": "Let's rock and roll!",
+    "slots": {
+      "1": [
+        "Onix",
+        "Kabuto",
+        "Cranidos"
+      ],
+      "2": [
+        "Shieldon",
+        "Graveler",
+        "Cranidos"
+      ],
+      "3": [
+        "Tyrantrum",
+        "Golem",
+        "Aurorus"
+      ]
+    },
+    "tw_slots": {
+      "1": [
+        "大岩蛇",
+        "化石盔",
+        "頭蓋龍"
+      ],
+      "2": [
+        "盾甲龍",
+        "隆隆石",
+        "頭蓋龍"
+      ],
+      "3": [
+        "戰槌龍",
+        "隆隆岩",
+        "冰雪巨龍"
+      ]
+    }
+  },
+  {
+    "name": "Ghost-type Male Grunt",
+    "quote": "Ke...ke...ke...ke...ke...ke!",
+    "slots": {
+      "1": [
+        "Duskull",
+        "Gastly",
+        "Yamask"
+      ],
+      "2": [
+        "Dusclops",
+        "Sableye",
+        "Cofagrigus"
+      ],
+      "3": [
+        "Gengar",
+        "Froslass",
+        "Cofagrigus"
+      ]
+    },
+    "tw_slots": {
+      "1": [
+        "夜巡靈",
+        "鬼斯",
+        "哭哭面具"
+      ],
+      "2": [
+        "彷徨夜靈",
+        "勾魂眼",
+        "死神棺"
+      ],
+      "3": [
+        "耿鬼",
+        "雪妖女",
+        "死神棺"
+      ]
+    }
+  },
+  {
+    "name": "Dragon-type Female Grunt",
+    "quote": "ROAR! ...How'd that sound?",
+    "slots": {
+      "1": [
+        "Noibat",
+        "Deino",
+        "Dratini"
+      ],
+      "2": [
+        "Alolan Exeggutor",
+        "Dragonair",
+        "Gabite"
+      ],
+      "3": [
+        "Dragonite",
+        "Garchomp",
+        "Salamence"
+      ]
+    },
+    "tw_slots": {
+      "1": [
+        "嗡蝠",
+        "單首龍",
+        "迷你龍"
+      ],
+      "2": [
+        "阿羅拉椰蛋樹",
+        "哈克龍",
+        "尖牙陸鯊"
+      ],
+      "3": [
+        "快龍",
+        "烈咬陸鯊",
+        "暴飛龍"
+      ]
+    }
+  },
+  {
+    "name": "Dark-type Female Grunt",
+    "quote": "Wherever there is light, there is also shadow.",
+    "slots": {
+      "1": [
+        "Carvanha",
+        "Poochyena",
+        "Alolan Rattata"
+      ],
+      "2": [
+        "Sneasel",
+        "Houndour",
+        "Absol"
+      ],
+      "3": [
+        "Liepard",
+        "Hydreigon"
+      ]
+    },
+    "tw_slots": {
+      "1": [
+        "利牙魚",
+        "土狼犬",
+        "阿羅拉小拉達"
+      ],
+      "2": [
+        "狃拉",
+        "戴魯比",
+        "阿勃梭魯"
+      ],
+      "3": [
+        "酷豹",
+        "三首惡龍"
+      ]
+    }
+  },
+  {
+    "name": "Steel-type Male Grunt",
+    "quote": "You're no match for my iron will!",
+    "slots": {
+      "1": [
+        "Alolan Sandshrew",
+        "Aron",
+        "Beldum"
+      ],
+      "2": [
+        "Lairon",
+        "Skarmory",
+        "Metang"
+      ],
+      "3": [
+        "Aggron",
+        "Alolan Sandslash",
+        "Probopass"
+      ]
+    },
+    "tw_slots": {
+      "1": [
+        "阿羅拉穿山鼠",
+        "可可多拉",
+        "鐵啞鈴"
+      ],
+      "2": [
+        "可多拉",
+        "盔甲鳥",
+        "金屬怪"
+      ],
+      "3": [
+        "波士可多拉",
+        "阿羅拉穿山王",
+        "大朝北鼻"
+      ]
+    }
+  },
+  {
+    "name": "Fairy-type Female Grunt",
+    "quote": "Check out my cute Pokémon!",
+    "slots": {
+      "1": [
+        "Ralts",
+        "Snubbull",
+        "Alolan Vulpix"
+      ],
+      "2": [
+        "Snubbull",
+        "Galarian Weezing",
+        "Kirlia"
+      ],
+      "3": [
+        "Alolan Ninetales",
+        "Galarian Weezing",
+        "Granbull"
+      ]
+    },
+    "tw_slots": {
+      "1": [
+        "拉魯拉絲",
+        "布魯",
+        "阿羅拉六尾"
+      ],
+      "2": [
+        "布魯",
+        "伽勒爾雙彈瓦斯",
+        "奇魯莉安"
+      ],
+      "3": [
+        "阿羅拉九尾",
+        "伽勒爾雙彈瓦斯",
+        "布魯皇"
+      ]
+    }
+  },
+  {
+    "name": "Male Grunt",
+    "quote": "Winning is for winners.",
+    "slots": {
+      "1": [
+        "Bulbasaur",
+        "Charmander",
+        "Squirtle"
+      ],
+      "2": [
+        "Ivysaur",
+        "Charmeleon",
+        "Wartortle"
+      ],
+      "3": [
+        "Venusaur",
+        "Charizard",
+        "Blastoise"
+      ]
+    },
+    "tw_slots": {
+      "1": [
+        "妙蛙種子",
+        "小火龍",
+        "傑尼龜"
+      ],
+      "2": [
+        "妙蛙草",
+        "火恐龍",
+        "卡咪龜"
+      ],
+      "3": [
+        "妙蛙花",
+        "噴火龍",
+        "水箭龜"
+      ]
+    }
+  },
+  {
+    "name": "Female Grunt",
+    "quote": "Winning is for winners.",
+    "slots": {
+      "1": [
+        "Snorlax",
+        "Lapras"
+      ],
+      "2": [
+        "Poliwrath",
+        "Gardevoir",
+        "Snorlax"
+      ],
+      "3": [
+        "Gyarados",
+        "Dragonite",
+        "Snorlax"
+      ]
+    },
+    "tw_slots": {
+      "1": [
+        "卡比獸",
+        "拉普拉斯"
+      ],
+      "2": [
+        "蚊香泳士",
+        "沙奈朵",
+        "卡比獸"
+      ],
+      "3": [
+        "暴鯉龍",
+        "快龍",
+        "卡比獸"
+      ]
+    }
+  },
+  {
+    "name": "Decoy Female Grunt",
+    "quote": "Fooled ya, twerp.",
+    "slots": {
+      "1": [
+        "Bellsprout"
+      ],
+      "2": [
+        "Raticate",
+        "Weepinbell"
+      ],
+      "3": [
+        "Raticate",
+        "Snorlax"
+      ]
+    },
+    "tw_slots": {
+      "1": [
+        "喇叭芽"
+      ],
+      "2": [
+        "拉達",
+        "口呆花"
+      ],
+      "3": [
+        "拉達",
+        "卡比獸"
+      ]
+    }
+  }
+]
