@@ -12,4 +12,4 @@ COPY . .
 
 EXPOSE 5050
 
-CMD ["sh", "-c", "gunicorn app:app --bind 0.0.0.0:$PORT --workers 2 --threads 4 --timeout 120"]
+CMD ["sh", "-c", "gunicorn app:app --bind 0.0.0.0:$PORT --workers 1 --threads 4 --max-requests 200 --max-requests-jitter 50 --timeout 120"]

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-報寶貝火箭隊雷達 - 本地 Web 應用伺服器
+全台灣火箭隊即時情報雷達 - Web 應用伺服器
 提供全台灣/分區快速掃描、屬性分類、卡比獸/乘龍專屬快篩、幹部快篩與導航地圖。
 """
 
@@ -15,6 +15,13 @@ import jinja2
 
 base_dir = os.path.dirname(os.path.abspath(__file__))
 app = Flask(__name__, template_folder=os.path.join(base_dir, "templates"))
+
+# 啟用 Gzip/Brotli 高效壓縮，巨幅降低傳輸頻寬與 Buffer 記憶體
+try:
+    from flask_compress import Compress
+    Compress(app)
+except Exception:
+    pass
 
 # 雙重防呆模板加載器：同時支援 templates 目錄與根目錄，解決 GitHub 網頁上傳目錄層級問題
 app.jinja_loader = jinja2.ChoiceLoader([
@@ -33,7 +40,8 @@ CACHE_LOCK = threading.Lock()
 CACHE_TTL = 45
 
 def get_cached_rockets(city_name="全台灣 (全島掃描)"):
-    """取得指定城市或全台灣的火箭隊資料 (帶 45 秒快取)"""
+    """取得指定城市或全台灣的火箭隊資料 (帶 45 秒快取，單份快取防 OOM)"""
+    import gc
     now = time.time()
     with CACHE_LOCK:
         if city_name in ROCKET_CACHE and (now - CACHE_TIMESTAMP.get(city_name, 0)) < CACHE_TTL:
@@ -41,8 +49,12 @@ def get_cached_rockets(city_name="全台灣 (全島掃描)"):
 
     rockets = crawler.get_rockets_by_city(city_name)
     with CACHE_LOCK:
+        # 清除舊快取，避免多個不同城市累積吃爆 Render 512MB 記憶體上限
+        ROCKET_CACHE.clear()
+        CACHE_TIMESTAMP.clear()
         ROCKET_CACHE[city_name] = rockets
         CACHE_TIMESTAMP[city_name] = now
+    gc.collect()
     return rockets
 
 @app.route("/ping")

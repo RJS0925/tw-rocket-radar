@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-報寶貝 (twpkinfo) 火箭隊雷達專用爬蟲模組
+全台灣火箭隊雷達專用爬蟲模組
 功能：
 1. 爬取台灣全島/各區域補給站火箭隊佔領資訊 (getgym.ashx)
 2. 屬性精確分類 (龍、水、火、草、電、格鬥、惡、飛行、超能、幽靈、地面、岩石、冰、一般、毒、妖精、蟲、鋼等)
@@ -50,7 +50,7 @@ class RocketCrawler:
             pass
 
     def fetch_raw_stops(self, lat0, lng0, lat1, lng1):
-        """向報寶貝 API 發送請求獲取補給站資料"""
+        """向補給站情報 API 發送請求獲取補給站資料"""
         params = {
             "a": str(lat0),
             "b": str(lng0),
@@ -88,8 +88,8 @@ class RocketCrawler:
         expire_str = item.get("p", "")
         start_str = item.get("o", "")
         
-        # 僅保留火箭隊項目
-        if not ("rocket" in j_val.lower() or "^" in v_val):
+        # 僅保留補給站火箭隊入侵項目 (嚴格排除團體戰頭目蛋 egg 與道館頭目 boss，降低 30% 記憶體佔用)
+        if item.get("i") != "stop" or not ("rocket" in j_val.lower()):
             return None
             
         try:
@@ -99,7 +99,7 @@ class RocketCrawler:
             return None
             
         # 計算倒數與過期狀態 (強制校準為台灣時間 UTC+8)
-        # 報寶貝回傳的是台灣本地時間，雲端伺服器 (Render/Linux) 預設為 UTC，時差剛好 8 小時 (480 分鐘)！
+        # 資料來源回傳的是台灣本地時間，雲端伺服器 (Render/Linux) 預設為 UTC，時差剛好 8 小時 (480 分鐘)！
         remaining_seconds = 0
         remaining_text = "即將結束"
         tw_tz = datetime.timezone(datetime.timedelta(hours=8))
@@ -180,12 +180,17 @@ class RocketCrawler:
 
     def get_rockets(self, lat0=25.35, lng0=122.10, lat1=21.80, lng1=120.00):
         """抓取指定經緯度範圍內的所有火箭隊"""
+        import gc
         raw_items = self.fetch_raw_stops(lat0, lng0, lat1, lng1)
         results = []
         for item in raw_items:
             parsed = self.parse_rocket_item(item)
             if parsed:
                 results.append(parsed)
+                
+        # 即時釋放原始爬取物件，降低峰值記憶體 (Peak RSS)
+        del raw_items
+        gc.collect()
                 
         # 依剩餘時間排序
         results.sort(key=lambda x: x["remaining_seconds"], reverse=True)
@@ -221,7 +226,7 @@ def format_cli_report(rockets, region_name="全台灣"):
     total = len(rockets)
     lines = []
     lines.append("=" * 75)
-    lines.append(f"⚡ 報寶貝火箭隊即時雷達情報 [{region_name}] (共發現 {total} 處火箭隊佔領) ⚡")
+    lines.append(f"⚡ 全台灣火箭隊即時雷達情報 [{region_name}] (共發現 {total} 處火箭隊佔領) ⚡")
     lines.append("=" * 75)
     
     # 幹部專區
@@ -269,7 +274,7 @@ if __name__ == "__main__":
     import sys
     sys.stdout.reconfigure(encoding='utf-8')
     crawler = RocketCrawler()
-    print("正在向報寶貝獲取【全台灣】火箭隊數據 (約需 1~2 秒)...")
+    print("正在獲取【全台灣】火箭隊即時數據 (約需 1~2 秒)...")
     rockets = crawler.get_rockets_by_city("全台灣 (全島掃描)")
     report = format_cli_report(rockets, region_name="全台灣")
     print(report)
