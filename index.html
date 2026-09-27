@@ -943,6 +943,37 @@
             }
         }
 
+        // 從本季手冊中即時查詢對戰台詞、陣容池與剋制 (避免在 2.8 萬筆站點重複傳輸 46MB 資料)
+        function getRosterInfo(r) {
+            if (!seasonRosterData) return {};
+            if (r.is_leader && seasonRosterData.leaders) {
+                for (const [k, l] of Object.entries(seasonRosterData.leaders)) {
+                    const name = l.name_ch || l.name || k;
+                    if ((r.title && r.title.includes(name)) || 
+                        (r.type_name && r.type_name.includes(name)) ||
+                        (l.first_pokemons && l.first_pokemons.includes(r.first_pokemon_display))) {
+                        return l;
+                    }
+                }
+            }
+            if (seasonRosterData.grunts) {
+                const isFemale = r.gender && r.gender.includes("女");
+                for (const g of seasonRosterData.grunts) {
+                    const matchType = r.type_name && (r.type_name.includes(g.type_name) || g.type_name.includes(r.type_name));
+                    const gruntFemale = g.gender && g.gender.includes("女");
+                    if (matchType && (isFemale === gruntFemale || !g.gender)) {
+                        return g;
+                    }
+                }
+                for (const g of seasonRosterData.grunts) {
+                    if (r.type_name && (r.type_name.includes(g.type_name) || g.type_name.includes(r.type_name))) {
+                        return g;
+                    }
+                }
+            }
+            return {};
+        }
+
         // 渲染單張火箭隊卡片
         function renderRocketCard(r) {
             const typeColor = TYPE_COLORS[r.type_name] || r.type_color || "#e53935";
@@ -952,7 +983,7 @@
             if (r.is_leader) {
                 roleBadgeClass = "badge-leader";
                 roleIcon = '<i class="fa-solid fa-crown"></i>';
-            } else if (r.gender.includes("女")) {
+            } else if (r.gender && r.gender.includes("女")) {
                 roleBadgeClass = "badge-female";
                 roleIcon = '<i class="fa-solid fa-venus"></i>';
             }
@@ -962,11 +993,21 @@
             const isSnorlax = r.type_name && r.type_name.includes("卡比獸");
             const isCopied = copiedStopIds.has(r.id);
 
-            // 賽季陣容三隻文字
-            const firstPoolStr = (r.first_pokemons_pool || []).slice(0, 3).join(" / ") || r.first_pokemon_display;
-            const secondPoolStr = (r.second_pokemons && r.second_pokemons.length > 0) ? r.second_pokemons.slice(0, 3).join(" / ") : "同屬性隨機";
-            const thirdPoolStr = (r.third_pokemons && r.third_pokemons.length > 0) ? r.third_pokemons.slice(0, 3).join(" / ") : "最終主力輪替";
-            const catchableStr = (r.catchable || []).slice(0, 3).join(", ") || "暗影寶可夢";
+            // 賽季陣容三隻文字與手冊情報
+            const info = getRosterInfo(r);
+            const firstPool = (r.first_pokemons_pool && r.first_pokemons_pool.length) ? r.first_pokemons_pool : ((info.first_pokemons && info.first_pokemons.length) ? info.first_pokemons : [r.first_pokemon_display]);
+            const firstPoolStr = firstPool.slice(0, 3).join(" / ") || r.first_pokemon_display;
+            const secondPool = (r.second_pokemons && r.second_pokemons.length > 0) ? r.second_pokemons : (info.second_pokemons || []);
+            const secondPoolStr = secondPool.length > 0 ? secondPool.slice(0, 3).join(" / ") : "同屬性隨機";
+            const thirdPool = (r.third_pokemons && r.third_pokemons.length > 0) ? r.third_pokemons : (info.third_pokemons || []);
+            const thirdPoolStr = thirdPool.length > 0 ? thirdPool.slice(0, 3).join(" / ") : "最終主力輪替";
+            const catchable = (r.catchable && r.catchable.length > 0) ? r.catchable : (info.catchable || ["暗影寶可夢"]);
+            const catchableStr = catchable.slice(0, 3).join(", ") || "暗影寶可夢";
+
+            const tauntStr = r.taunt || info.taunt || "火箭隊來襲！";
+            const noteStr = r.certainty_note || info.certainty_note || "依賽季陣容輪替";
+            const counters = (r.counters && r.counters.length > 0) ? r.counters : (info.counters || ["依屬性剋制打手"]);
+            const gmapsUrl = r.gmaps_url || `https://www.google.com/maps/search/?api=1&query=${r.lat},${r.lng}`;
 
             // 詳細地址與縣市行政區
             const displayAddress = r.full_address || `${r.county || ''}${r.district || ''} · ${r.name || ''}`;
@@ -1007,7 +1048,7 @@
 
                             <!-- 火箭隊台詞 -->
                             <div class="taunt-box">
-                                「${r.taunt}」
+                                「${tauntStr}」
                             </div>
 
                             <!-- 第一隻出場角色與本季三隻陣容預覽 -->
@@ -1021,7 +1062,7 @@
                                     ${r.first_pokemon_display}
                                 </div>
                                 <div class="note-text">
-                                    <i class="fa-solid fa-circle-info text-info me-1"></i>${r.certainty_note}
+                                    <i class="fa-solid fa-circle-info text-info me-1"></i>${noteStr}
                                 </div>
 
                                 <!-- 本季三隻出場預覽池 -->
@@ -1047,7 +1088,7 @@
 
                             <!-- 剋制推薦 -->
                             <div class="counter-box">
-                                <i class="fa-solid fa-shield-halved me-1"></i><strong>推薦剋制：</strong>${r.counters[0] || "依屬性剋制"}
+                                <i class="fa-solid fa-shield-halved me-1"></i><strong>推薦剋制：</strong>${counters[0] || "依屬性剋制"}
                             </div>
                         </div>
 
@@ -1056,7 +1097,7 @@
                             <button class="btn-copy-coord ${isCopied ? 'border-success text-success' : ''}" id="btn-copy-${r.id}" onclick="copyCoordinates(${r.lat}, ${r.lng}, '${r.id}')" title="只複製純經緯度數字">
                                 <i class="${isCopied ? 'fa-solid fa-check text-success' : 'fa-regular fa-copy'} me-1"></i>${isCopied ? '已複製純座標' : '複製純座標'}
                             </button>
-                            <a href="${r.gmaps_url}" target="_blank" class="btn-nav">
+                            <a href="${gmapsUrl}" target="_blank" class="btn-nav">
                                 <i class="fa-solid fa-location-arrow"></i>地圖導航
                             </a>
                         </div>

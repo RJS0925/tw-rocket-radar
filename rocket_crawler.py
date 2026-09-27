@@ -149,33 +149,17 @@ class RocketCrawler:
             "name": stop_name,
             "lat": lat,
             "lng": lng,
-            "county": loc["county"],               # 縣市，例如 "台北市"
-            "district": loc["district"],           # 行政區，例如 "中正區"
-            "area_name": loc["area_name"],         # "台北市中正區"
-            "full_address": loc["full_address"],   # "台北市中正區 · 台北車站"
-            "region_group": loc["region_group"],   # "北部" / "中部" / "南部" / "東部" / "離島"
-            "category": details["category"],
-            "role_type": details["role_type"],     # "幹部" 或 "小兵"
-            "type_name": details["type_name"],     # "龍", "水", "火", "幹部", etc.
+            "county": loc["county"],
+            "district": loc["district"],
+            "region_group": loc["region_group"],
+            "type_name": details["type_name"],
             "type_color": details["type_color"],
-            "gender": details["gender"],           # "男小兵 ♂", "女小兵 ♀", 或幹部性別
-            "title": details["name"],              # 如 "龍屬性 女小兵 ♀" 或 "克里夫"
+            "gender": details["gender"],
+            "title": details["name"],
             "is_leader": details["is_leader"],
-            "certainty_level": details["certainty_level"],
-            "certainty_badge": details["certainty_badge"],
-            "certainty_note": details["certainty_note"],
             "first_pokemon_display": first_pokemon_display,
-            "first_pokemons_pool": details["first_pokemons_pool"],
-            "second_pokemons": details.get("second_pokemons", []),
-            "third_pokemons": details.get("third_pokemons", []),
-            "catchable": details["catchable"],
-            "taunt": details["taunt"],
-            "counters": details["counters"],
-            "start_time": start_str,
-            "expire_time": expire_str,
             "remaining_seconds": remaining_seconds,
-            "remaining_text": remaining_text,
-            "gmaps_url": gmaps_url
+            "remaining_text": remaining_text
         }
 
     def get_rockets(self, lat0=25.35, lng0=122.10, lat1=21.80, lng1=120.00):
