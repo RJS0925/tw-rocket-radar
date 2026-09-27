@@ -91,22 +91,25 @@ def index():
 
 @app.route("/api/rockets")
 def api_rockets():
-    """取得火箭隊清單 API，支援卡比獸、幹部、屬性、縣市、性別快篩 (極速 0.01 秒秒開)"""
+    """取得火箭隊清單 API：支援分縣市、時間最久優先排序、單次 30 筆超省流量模式"""
     city = request.args.get("city", "全台灣 (全島掃描)")
-    filter_county = request.args.get("county", "").strip()
+    filter_county = request.args.get("county", "台北市").strip()
     filter_type = request.args.get("type", "").strip()
     filter_gender = request.args.get("gender", "").strip()
     leader_only = request.args.get("leader_only", "").lower() in ["true", "1", "yes"]
     snorlax_only = request.args.get("snorlax_only", "").lower() in ["true", "1", "yes"]
     hot_only = request.args.get("hot_only", "").lower() in ["true", "1", "yes"]
     keyword = request.args.get("q", "").strip().lower()
-    limit = request.args.get("limit", default=0, type=int)
+    limit = request.args.get("limit", default=30, type=int)
+    offset = request.args.get("offset", default=0, type=int)
 
     all_rockets = get_cached_rockets(city)
 
-    # 1. 永遠統計全島各縣市即時真實總數 (供縣市選單顯示各縣市幾處)
+    # 1. 永遠統計全島各縣市即時真實總數 (排除需黑雷達的偽裝點，供縣市選單顯示各縣市幾處)
     county_counts = {}
     for r in all_rockets:
+        if "偽裝" in r.get("type_name", "") or "阪木" in r.get("type_name", ""):
+            continue
         c = r.get("county", "其他地區")
         county_counts[c] = county_counts.get(c, 0) + 1
 
@@ -114,14 +117,19 @@ def api_rockets():
     hot_types = ["卡比獸", "幹部", "龍", "鋼", "格鬥", "妖精"]
     type_counts = {}
     leader_count = 0
-    giovanni_count = 0
     snorlax_count = 0
     dragon_count = 0
     male_count = 0
     female_count = 0
 
+    # 2. 針對當前所選縣市過濾並計算屬性分佈
     for r in all_rockets:
-        # 縣市篩選 (若有選指定縣市，相關統計與資料精確對應該縣市)
+        # 預設排除需黑雷達才能看見的隱身點 (偽裝小兵/阪木老大)，避免玩家白跑一趟
+        if filter_type != "阪木老大" and not keyword:
+            if "偽裝" in r.get("type_name", "") or "阪木" in r.get("type_name", ""):
+                continue
+
+        # 縣市篩選 (預設台北市，若選全部則為全島)
         if filter_county and filter_county != "全部":
             if r.get("county") != filter_county and r.get("region_group") != filter_county:
                 continue
@@ -130,8 +138,6 @@ def api_rockets():
         type_counts[t] = type_counts.get(t, 0) + 1
         if t == "幹部":
             leader_count += 1
-        elif "阪木" in t:
-            giovanni_count += 1
         if "卡比獸" in t:
             snorlax_count += 1
         if "龍" in t:
@@ -142,7 +148,7 @@ def api_rockets():
             female_count += 1
 
         # 幹部篩選
-        if leader_only and (not r["is_leader"] or "阪木" in r["type_name"]):
+        if leader_only and not r["is_leader"]:
             continue
             
         # 卡比獸/乘龍女小兵快篩
@@ -155,11 +161,11 @@ def api_rockets():
 
         # 屬性篩選
         if filter_type and filter_type != "全部":
-            if filter_type == "幹部" and (not r["is_leader"] or "阪木" in r["type_name"]):
+            if filter_type == "幹部" and not r["is_leader"]:
                 continue
-            elif filter_type == "阪木老大" and "阪木" not in r["type_name"]:
+            elif filter_type == "卡比獸/乘龍" and "卡比獸" not in r["type_name"]:
                 continue
-            elif filter_type not in ["幹部", "阪木老大"] and filter_type not in r["type_name"]:
+            elif filter_type not in ["幹部", "卡比獸/乘龍"] and filter_type not in r["type_name"]:
                 continue
 
         # 小兵性別篩選
@@ -178,18 +184,25 @@ def api_rockets():
 
         filtered.append(r)
 
-    if limit > 0 and len(filtered) > limit:
-        items_to_send = filtered[:limit]
+    # 3. ★ 核心關鍵：依剩餘時間最久優先排序 (秒數由大到小)
+    filtered.sort(key=lambda x: x.get("remaining_seconds", 0), reverse=True)
+
+    # 4. 超省流量分頁切片：每次只回傳指定筆數 (預設 30 筆，僅約 4KB)
+    if limit > 0:
+        items_to_send = filtered[offset : offset + limit]
     else:
         items_to_send = filtered
 
     return jsonify({
         "status": "success",
         "city": city,
-        "total": len(all_rockets),
+        "county": filter_county,
+        "total_in_county": sum(type_counts.values()),
         "filtered_total": len(filtered),
+        "offset": offset,
+        "limit": limit,
+        "has_more": len(filtered) > (offset + limit) if limit > 0 else False,
         "leaders_count": leader_count,
-        "giovanni_count": giovanni_count,
         "snorlax_count": snorlax_count,
         "dragon_count": dragon_count,
         "male_count": male_count,
