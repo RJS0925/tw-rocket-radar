@@ -1,4 +1,4 @@
-# ⚡ 報寶貝 · 全台灣火箭隊即時情報雷達 (Team GO Rocket Radar)
+# ⚡全台灣火箭隊即時情報雷達 (Team GO Rocket Radar)
 
 專為 Pokémon GO 玩家打造的報寶貝 (`https://twpkinfo.com/igym.aspx`) 火箭隊佔領補給站專屬情報系統，支援**全台灣全島 9,600+ 處補給站即時掃描**與**第一隻角色確定性精準篩選**。
 
