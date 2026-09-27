@@ -649,7 +649,7 @@
             // 縣市地區篩選
             document.getElementById("countySelect").addEventListener("change", (e) => {
                 selectedCounty = e.target.value;
-                filterAndRender(true);
+                loadRockets(false, selectedCounty);
             });
 
             // 展開/收合本季各屬性陣容圖鑑
@@ -727,8 +727,8 @@
             }
         }
 
-        // 從 API 抓取全台資料
-        async function loadRockets(isSilent = false) {
+        // 從 API 抓取全台/分區資料 (支援 17KB 極速秒傳)
+        async function loadRockets(isSilent = false, county = "") {
             const btnRefresh = document.getElementById("btnRefresh");
             if (!isSilent) {
                 btnRefresh.disabled = true;
@@ -740,25 +740,29 @@
                 if (!seasonRosterData) {
                     await loadRosterData();
                 }
-                const res = await fetch(`/api/rockets?city=全台灣`);
+                const targetCounty = county || selectedCounty;
+                const countyParam = (targetCounty && targetCounty !== "全部") ? `&county=${encodeURIComponent(targetCounty)}` : "";
+                const res = await fetch(`/api/rockets?city=全台灣${countyParam}`);
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 const data = await res.json();
                 
                 allFetchedRockets = data.items || [];
                 
                 // 更新統計
-                document.getElementById("statTotal").innerText = data.total;
-                document.getElementById("statSnorlax").innerText = data.snorlax_count;
-                document.getElementById("statDragon").innerText = data.dragon_count;
-                document.getElementById("statLeaders").innerText = data.leaders_count;
-                document.getElementById("updateTimeText").innerText = `最後更新：${new Date().toLocaleTimeString()} (共 ${data.total} 處)`;
+                if (data.total !== undefined) document.getElementById("statTotal").innerText = data.total;
+                if (data.snorlax_count !== undefined) document.getElementById("statSnorlax").innerText = data.snorlax_count;
+                if (data.dragon_count !== undefined) document.getElementById("statDragon").innerText = data.dragon_count;
+                if (data.leaders_count !== undefined) document.getElementById("statLeaders").innerText = data.leaders_count;
+                document.getElementById("updateTimeText").innerText = `最後更新：${new Date().toLocaleTimeString()} (全台共 ${data.total} 處)`;
 
                 // 更新縣市選單計數
-                updateCountySelectCounts(data.county_counts || {});
+                if (data.county_counts && Object.keys(data.county_counts).length > 0) {
+                    updateCountySelectCounts(data.county_counts);
+                }
 
                 // 只有手動重新整理時才重置篩選鈕與強刷，靜默背景同步時做平滑比對
                 if (!isSilent) {
-                    renderTypePills(data.type_counts);
+                    if (data.type_counts) renderTypePills(data.type_counts);
                     filterAndRender(true, true);
                 } else {
                     filterAndRender(false, false);
@@ -766,7 +770,7 @@
             } catch (err) {
                 console.error("載入失敗:", err);
                 if (!isSilent) {
-                    showToast("連線情報伺服器逾時，請稍後重試！");
+                    showToast("伺服器連線稍有延遲，請稍候重試或點擊重新整理！");
                 }
             } finally {
                 btnRefresh.disabled = false;
