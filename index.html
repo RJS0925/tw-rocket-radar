@@ -736,7 +736,12 @@
             }
 
             try {
+                // 確保對戰手冊已先載入完成
+                if (!seasonRosterData) {
+                    await loadRosterData();
+                }
                 const res = await fetch(`/api/rockets?city=全台灣`);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 const data = await res.json();
                 
                 allFetchedRockets = data.items || [];

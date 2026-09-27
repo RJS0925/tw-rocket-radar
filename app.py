@@ -33,29 +33,50 @@ app.jinja_loader = jinja2.ChoiceLoader([
 
 crawler = RocketCrawler()
 
-# 記憶體快取，全台灣掃描快取 45 秒
+# 記憶體快取，全台灣掃描快取 60 秒 (支援 Stale-While-Revalidate 零等待秒開)
 ROCKET_CACHE = {}
 CACHE_TIMESTAMP = {}
 CACHE_LOCK = threading.Lock()
-CACHE_TTL = 45
+CACHE_TTL = 60
 
-def get_cached_rockets(city_name="全台灣 (全島掃描)"):
-    """取得指定城市或全台灣的火箭隊資料 (帶 45 秒快取，單份快取防 OOM)"""
+def get_cached_rockets(city_name="全台灣 (全島掃描)", force_refresh=False):
+    """取得指定城市或全台灣的火箭隊資料 (帶快取，優先秒開零等待)"""
     import gc
     now = time.time()
     with CACHE_LOCK:
-        if city_name in ROCKET_CACHE and (now - CACHE_TIMESTAMP.get(city_name, 0)) < CACHE_TTL:
+        # 1. 快取未過期，直接回傳 (0.01 秒)
+        if not force_refresh and city_name in ROCKET_CACHE and (now - CACHE_TIMESTAMP.get(city_name, 0)) < CACHE_TTL:
+            return ROCKET_CACHE[city_name]
+        # 2. 若快取稍微過期但有舊資料，直接先秒傳舊資料給使用者 (絕不讓使用者卡住等 15 秒)
+        if not force_refresh and city_name in ROCKET_CACHE and ROCKET_CACHE[city_name]:
             return ROCKET_CACHE[city_name]
 
+    # 3. 第一次啟動無快取或背景強制更新時才執行爬蟲
     rockets = crawler.get_rockets_by_city(city_name)
-    with CACHE_LOCK:
-        # 清除舊快取，避免多個不同城市累積吃爆 Render 512MB 記憶體上限
-        ROCKET_CACHE.clear()
-        CACHE_TIMESTAMP.clear()
-        ROCKET_CACHE[city_name] = rockets
-        CACHE_TIMESTAMP[city_name] = now
-    gc.collect()
-    return rockets
+    if rockets:
+        with CACHE_LOCK:
+            ROCKET_CACHE.clear()
+            CACHE_TIMESTAMP.clear()
+            ROCKET_CACHE[city_name] = rockets
+            CACHE_TIMESTAMP[city_name] = now
+        gc.collect()
+        return rockets
+    else:
+        # 若遇上游網路波動，若有舊快取則維持舊快取
+        with CACHE_LOCK:
+            return ROCKET_CACHE.get(city_name, [])
+
+def background_radar_updater():
+    """伺服器啟動後，在背景定期預熱更新全台資料 (每 60 秒一次)，保證使用者連線永遠 0 秒加載"""
+    time.sleep(3)
+    while True:
+        try:
+            get_cached_rockets("全台灣 (全島掃描)", force_refresh=True)
+        except Exception:
+            pass
+        time.sleep(60)
+
+threading.Thread(target=background_radar_updater, daemon=True).start()
 
 @app.route("/ping")
 @app.route("/healthz")
