@@ -216,7 +216,7 @@ def format_cli_report(rockets, region_name="全台灣"):
     # 幹部專區
     leaders = [r for r in rockets if r["is_leader"]]
     if leaders:
-        lines.append(f"\n【👑 火箭隊幹部與首領出沒情報 (共 {len(leaders)} 處)】- 賽季固定第一隻！")
+        lines.append(f"\n【👑 火箭隊幹部與阪木老大出沒情報 (共 {len(leaders)} 處)】- 賽季固定第一隻！")
         for idx, l in enumerate(leaders[:10], 1):
             lines.append(f"  [{idx}] {l['title']} | 補給站: {l['name']} | 剩餘: {l['remaining_text']}")
             lines.append(f"      📍 座標: {l['lat']:.5f}, {l['lng']:.5f} | 導航: {l['gmaps_url']}")

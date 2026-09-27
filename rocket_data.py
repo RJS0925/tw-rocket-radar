@@ -8,7 +8,7 @@ Team GO Rocket (火箭隊) 最新官方賽季資料庫模組
 - 【幹部 克里夫 (Cliff)】：首發固定為 牙牙！
 - 【幹部 亞洛 (Arlo)】：首發固定為 寶寶暴龍！
 - 【幹部 希爾拉 (Sierra)】：首發固定為 冰雪龍！
-- 【最高首領 阪木老大 (Giovanni)】：首發固定為 貓老大，最終戰為當季限定暗影傳說神獸！
+- 【阪木老大 (Giovanni)】：首發固定為 貓老大，最終戰為當季限定暗影傳說神獸！
 """
 
 # 屬性中英對照與代表顏色
@@ -42,9 +42,9 @@ LEADER_INFO = {
     "arlo": {"name_ch": "亞洛", "role": "幹部", "gender": "男", "color": "#e74c3c"},
     "cliff": {"name_ch": "克里夫", "role": "幹部", "gender": "男", "color": "#2980b9"},
     "sierra": {"name_ch": "希爾拉", "role": "幹部", "gender": "女", "color": "#8e44ad"},
-    "giovanni": {"name_ch": "阪木老大", "role": "最高老大", "gender": "男", "color": "#2c3e50"},
-    "giovanni_r": {"name_ch": "阪木老大", "role": "最高老大", "gender": "男", "color": "#2c3e50"},
-    "giovanni_x": {"name_ch": "阪木老大", "role": "最高老大", "gender": "男", "color": "#2c3e50"},
+    "giovanni": {"name_ch": "阪木老大", "role": "阪木老大", "gender": "男", "color": "#2c3e50"},
+    "giovanni_r": {"name_ch": "阪木老大", "role": "阪木老大", "gender": "男", "color": "#2c3e50"},
+    "giovanni_x": {"name_ch": "阪木老大", "role": "阪木老大", "gender": "男", "color": "#2c3e50"},
     "decoy": {"name_ch": "偽裝者", "role": "偽裝小兵", "gender": "男/女", "color": "#7f8c8d"}
 }
 
@@ -427,8 +427,8 @@ LEADER_ROSTER = {
         "counters": ["格鬥/鋼屬性剋冰雪龍 (怪力/巨金怪 4倍雙弱點！)", "火屬性剋堅果啞鈴與大鋼蛇", "草/電屬性剋水箭龜與美納斯"]
     },
     "giovanni": {
-        "title": "火箭隊最高首領 - 阪木老大 (Giovanni)",
-        "role": "最高老大",
+        "title": "阪木老大 (Giovanni)",
+        "role": "阪木老大",
         "gender": "男",
         "taunt": "我絕不容忍你的干涉。 (I will not tolerate your interference.)",
         "certainty_level": "賽季固定",
@@ -465,7 +465,7 @@ LEADER_ROSTER = {
 
 def get_rocket_details(type_raw: str, gender_raw: str, j_val: str, pokemon_id_from_api=None, pokemon_dict=None):
     """
-    根據報寶貝原始欄位 (type_raw, gender_raw, j_val) 與第一隻 ID 綜合解析出最完整資訊
+    根據原始欄位 (type_raw, gender_raw, j_val) 與第一隻 ID 綜合解析出最完整資訊
     """
     type_key = (type_raw or "").lower().strip()
     gender_key = (gender_raw or "").upper().strip()
@@ -484,8 +484,8 @@ def get_rocket_details(type_raw: str, gender_raw: str, j_val: str, pokemon_id_fr
         if lk in type_key or lk in j_str.lower():
             leader_data = LEADER_ROSTER.get(lk)
             return {
-                "category": "幹部/首領",
-                "role_type": "幹部",
+                "category": "幹部/阪木老大",
+                "role_type": "幹部" if lk != "giovanni" else "阪木老大",
                 "name": linfo["name_ch"],
                 "gender": linfo["gender"],
                 "type_name": linfo["role"],

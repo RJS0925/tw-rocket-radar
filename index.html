@@ -646,10 +646,12 @@
             // 重新整理
             document.getElementById("btnRefresh").addEventListener("click", () => loadRockets());
 
-            // 縣市地區篩選
+            // 縣市地區篩選 (秒級切換，完全無需重複向伺服器請求)
             document.getElementById("countySelect").addEventListener("change", (e) => {
                 selectedCounty = e.target.value;
-                loadRockets(false, selectedCounty);
+                selectedType = "全部"; // 切換縣市時預設重置屬性為「全部」
+                updateStatsAndPillsForCounty(selectedCounty);
+                filterAndRender(true);
             });
 
             // 展開/收合本季各屬性陣容圖鑑
@@ -685,7 +687,7 @@
                 filterAndRender(true);
             });
 
-            // 幹部按鈕
+            // 幹部按鈕 (三大幹部)
             const btnLeader = document.getElementById("btnLeaderOnly");
             btnLeader.addEventListener("click", () => {
                 leaderOnly = !leaderOnly;
@@ -727,8 +729,8 @@
             }
         }
 
-        // 從 API 抓取全台/分區資料 (支援 17KB 極速秒傳)
-        async function loadRockets(isSilent = false, county = "") {
+        // 從 API 抓取全台資料 (支援 Gzip 極速秒傳)
+        async function loadRockets(isSilent = false) {
             const btnRefresh = document.getElementById("btnRefresh");
             if (!isSilent) {
                 btnRefresh.disabled = true;
@@ -740,33 +742,24 @@
                 if (!seasonRosterData) {
                     await loadRosterData();
                 }
-                const targetCounty = county || selectedCounty;
-                const countyParam = (targetCounty && targetCounty !== "全部") ? `&county=${encodeURIComponent(targetCounty)}` : "";
-                const res = await fetch(`/api/rockets?city=全台灣${countyParam}`);
+                const res = await fetch(`/api/rockets?city=全台灣`);
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 const data = await res.json();
                 
                 allFetchedRockets = data.items || [];
                 
-                // 更新統計
-                if (data.total !== undefined) document.getElementById("statTotal").innerText = data.total;
-                if (data.snorlax_count !== undefined) document.getElementById("statSnorlax").innerText = data.snorlax_count;
-                if (data.dragon_count !== undefined) document.getElementById("statDragon").innerText = data.dragon_count;
-                if (data.leaders_count !== undefined) document.getElementById("statLeaders").innerText = data.leaders_count;
-                document.getElementById("updateTimeText").innerText = `最後更新：${new Date().toLocaleTimeString()} (全台共 ${data.total} 處)`;
+                document.getElementById("updateTimeText").innerText = `最後更新：${new Date().toLocaleTimeString()} (全台共 ${data.total.toLocaleString()} 處)`;
 
-                // 更新縣市選單計數
+                // 更新縣市選單計數 (全台各縣市總數)
                 if (data.county_counts && Object.keys(data.county_counts).length > 0) {
-                    updateCountySelectCounts(data.county_counts);
+                    updateCountySelectCounts(data.county_counts, data.total);
                 }
 
-                // 只有手動重新整理時才重置篩選鈕與強刷，靜默背景同步時做平滑比對
-                if (!isSilent) {
-                    if (data.type_counts) renderTypePills(data.type_counts);
-                    filterAndRender(true, true);
-                } else {
-                    filterAndRender(false, false);
-                }
+                // 依當前所選縣市計算統計與屬性標籤數量
+                updateStatsAndPillsForCounty(selectedCounty);
+
+                // 渲染卡片
+                filterAndRender(true, !isSilent);
             } catch (err) {
                 console.error("載入失敗:", err);
                 if (!isSilent) {
@@ -778,60 +771,123 @@
             }
         }
 
+        // 依據目前選取的縣市（或全台灣）動態計算頂部數據與屬性標籤數量
+        function updateStatsAndPillsForCounty(county = "全部") {
+            let list = allFetchedRockets;
+            if (county && county !== "全部") {
+                list = allFetchedRockets.filter(r => r.county === county || r.region_group === county);
+            }
+
+            const total = list.length;
+            let snorlaxCount = 0;
+            let dragonCount = 0;
+            let leaderCount = 0;
+            let giovanniCount = 0;
+            const typeCounts = {};
+
+            for (const r of list) {
+                const t = r.type_name || "未知";
+                typeCounts[t] = (typeCounts[t] || 0) + 1;
+                if (t === "幹部") {
+                    leaderCount++;
+                } else if (t.includes("阪木")) {
+                    giovanniCount++;
+                }
+                if (t.includes("卡比獸")) {
+                    snorlaxCount++;
+                }
+                if (t.includes("龍")) {
+                    dragonCount++;
+                }
+            }
+
+            // 更新頂部儀表板統計
+            const elTotal = document.getElementById("statTotal");
+            if (elTotal) elTotal.innerText = total.toLocaleString();
+            const elSnorlax = document.getElementById("statSnorlax");
+            if (elSnorlax) elSnorlax.innerText = snorlaxCount.toLocaleString();
+            const elDragon = document.getElementById("statDragon");
+            if (elDragon) elDragon.innerText = dragonCount.toLocaleString();
+            const elLeaders = document.getElementById("statLeaders");
+            if (elLeaders) elLeaders.innerText = leaderCount.toLocaleString();
+
+            // 更新屬性按鈕
+            renderTypePills(typeCounts, total, snorlaxCount, leaderCount, giovanniCount);
+        }
+
         // 更新縣市選單的即時計數
-        function updateCountySelectCounts(countyCounts) {
+        function updateCountySelectCounts(countyCounts, totalCount = 0) {
             const select = document.getElementById("countySelect");
+            const total = totalCount || allFetchedRockets.length;
             Array.from(select.options).forEach(opt => {
                 const val = opt.value;
                 if (val === "全部") {
-                    opt.innerText = `🗺️ 全台灣 (全部 ${allFetchedRockets.length} 處)`;
+                    opt.innerText = `🗺️ 全台灣 (全部 ${total.toLocaleString()} 處)`;
                 } else {
                     const count = countyCounts[val] || 0;
-                    opt.innerText = `📍 ${val} (${count} 處)`;
+                    opt.innerText = `📍 ${val} (${count.toLocaleString()} 處)`;
                 }
             });
         }
 
         // 渲染屬性按鈕
-        function renderTypePills(typeCounts) {
+        function renderTypePills(typeCounts, total = 0, snorlaxCount = 0, leaderCount = 0, giovanniCount = 0) {
             const container = document.getElementById("typePillsContainer");
             container.innerHTML = "";
+
+            const displayTotal = total || 0;
 
             // "全部" 按鈕
             const allPill = document.createElement("div");
             allPill.className = `type-pill ${selectedType === "全部" ? "active" : ""}`;
-            allPill.innerHTML = `全部 (${allFetchedRockets.length})`;
+            allPill.innerHTML = `全部 (${displayTotal.toLocaleString()})`;
             allPill.onclick = () => selectTypeFilter("全部");
             container.appendChild(allPill);
 
             // 卡比獸/乘龍 女小兵 按鈕 (優先突顯)
-            const snorlaxCount = allFetchedRockets.filter(r => r.type_name.includes("卡比獸")).length;
-            const snorlaxPill = document.createElement("div");
-            snorlaxPill.className = `type-pill ${selectedType.includes("卡比獸") ? "active" : ""}`;
-            snorlaxPill.style.borderLeft = `4px solid #a855f7`;
-            snorlaxPill.style.color = "#d8b4fe";
-            snorlaxPill.innerHTML = `💤 卡比獸/乘龍 (${snorlaxCount})`;
-            snorlaxPill.onclick = () => selectTypeFilter("卡比獸/乘龍");
-            container.appendChild(snorlaxPill);
+            const displaySnorlax = snorlaxCount || 0;
+            if (displaySnorlax > 0 || selectedCounty === "全部") {
+                const snorlaxPill = document.createElement("div");
+                snorlaxPill.className = `type-pill ${selectedType.includes("卡比獸") ? "active" : ""}`;
+                snorlaxPill.style.borderLeft = `4px solid #a855f7`;
+                snorlaxPill.style.color = "#d8b4fe";
+                snorlaxPill.innerHTML = `💤 卡比獸/乘龍 (${displaySnorlax.toLocaleString()})`;
+                snorlaxPill.onclick = () => selectTypeFilter("卡比獸/乘龍");
+                container.appendChild(snorlaxPill);
+            }
 
-            // 幹部按鈕
-            const leaderCount = allFetchedRockets.filter(r => r.is_leader).length;
-            const leaderPill = document.createElement("div");
-            leaderPill.className = `type-pill ${selectedType === "幹部" ? "active" : ""}`;
-            leaderPill.style.borderColor = "#eab308";
-            leaderPill.innerHTML = `👑 幹部 (${leaderCount})`;
-            leaderPill.onclick = () => selectTypeFilter("幹部");
-            container.appendChild(leaderPill);
+            // 幹部按鈕 (三大幹部：亞洛/克里夫/希爾拉)
+            const leaderVal = typeCounts["幹部"] || leaderCount || 0;
+            if (leaderVal > 0 || selectedCounty === "全部") {
+                const leaderPill = document.createElement("div");
+                leaderPill.className = `type-pill ${selectedType === "幹部" ? "active" : ""}`;
+                leaderPill.style.borderColor = "#eab308";
+                leaderPill.innerHTML = `👑 幹部 (${leaderVal.toLocaleString()})`;
+                leaderPill.onclick = () => selectTypeFilter("幹部");
+                container.appendChild(leaderPill);
+            }
+
+            // 阪木老大 按鈕
+            const giovanniVal = typeCounts["阪木老大"] || giovanniCount || 0;
+            if (giovanniVal > 0 || selectedCounty === "全部") {
+                const giovanniPill = document.createElement("div");
+                giovanniPill.className = `type-pill ${selectedType === "阪木老大" ? "active" : ""}`;
+                giovanniPill.style.borderColor = "#ef4444";
+                giovanniPill.style.color = "#fca5a5";
+                giovanniPill.innerHTML = `🕶️ 阪木老大 (${giovanniVal.toLocaleString()})`;
+                giovanniPill.onclick = () => selectTypeFilter("阪木老大");
+                container.appendChild(giovanniPill);
+            }
 
             // 各屬性按鈕
             const sortedTypes = Object.entries(typeCounts).sort((a, b) => b[1] - a[1]);
             for (const [tName, count] of sortedTypes) {
-                if (tName === "幹部" || tName.includes("卡比獸")) continue;
+                if (tName === "幹部" || tName === "阪木老大" || tName.includes("卡比獸") || tName === "偽裝小兵") continue;
                 const pill = document.createElement("div");
                 const color = TYPE_COLORS[tName] || "#4b5563";
                 pill.className = `type-pill ${selectedType === tName ? "active" : ""}`;
                 pill.style.borderLeft = `4px solid ${color}`;
-                pill.innerHTML = `${tName} (${count})`;
+                pill.innerHTML = `${tName} (${count.toLocaleString()})`;
                 pill.onclick = () => selectTypeFilter(tName);
                 container.appendChild(pill);
             }
@@ -872,9 +928,10 @@
 
                 // 屬性過濾
                 if (selectedType !== "全部") {
-                    if (selectedType === "幹部" && !r.is_leader) return false;
-                    if (selectedType.includes("卡比獸") && !r.type_name.includes("卡比獸")) return false;
-                    if (selectedType !== "幹部" && !selectedType.includes("卡比獸") && !r.type_name.includes(selectedType)) return false;
+                    if (selectedType === "幹部" && (!r.is_leader || (r.type_name && r.type_name.includes("阪木")))) return false;
+                    if (selectedType === "阪木老大" && (!r.type_name || !r.type_name.includes("阪木"))) return false;
+                    if (selectedType.includes("卡比獸") && (!r.type_name || !r.type_name.includes("卡比獸"))) return false;
+                    if (selectedType !== "幹部" && selectedType !== "阪木老大" && !selectedType.includes("卡比獸") && (!r.type_name || !r.type_name.includes(selectedType))) return false;
                 }
 
                 // 專屬卡比獸快篩
@@ -891,8 +948,8 @@
                     if (!r.gender.includes(selectedGender.replace("♂", "").replace("♀", "").trim())) return false;
                 }
 
-                // 幹部專屬篩選
-                if (leaderOnly && !r.is_leader) return false;
+                // 幹部專屬篩選 (三大幹部)
+                if (leaderOnly && (!r.is_leader || (r.type_name && r.type_name.includes("阪木")))) return false;
 
                 // 關鍵字搜尋 (補給站名稱、台詞、角色、縣市、行政區、詳細地址)
                 if (keyword) {
@@ -1183,8 +1240,8 @@
             
             let html = "";
             
-            // 幹部專區
-            html += `<div class="col-12"><h5 class="text-warning border-bottom border-warning pb-2"><i class="fa-solid fa-crown me-2"></i>火箭隊幹部與最高首領 (全台統一固定第 1 隻)</h5></div>`;
+            // 幹部與阪木老大專區
+            html += `<div class="col-12"><h5 class="text-warning border-bottom border-warning pb-2"><i class="fa-solid fa-crown me-2"></i>三大幹部與阪木老大 (全台統一固定第 1 隻)</h5></div>`;
             for (const [lKey, lData] of Object.entries(data.leaders)) {
                 html += `
                     <div class="col-md-6 col-lg-4">
